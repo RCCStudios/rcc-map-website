@@ -7,7 +7,31 @@ const CENTER_POSITION = [
   Number(import.meta.env.VITE_CENTER_LON)
 ];
 
+const MAPTILER_KEY = '7tUeZnzzL7AZQMNHuyuT';
+const DARK_MAP_ID = '019f7bd8-7d1b-7a94-be20-071acedc8033';
+const LIGHT_MAP_ID = '019f7bd9-903b-7e42-b37f-856a42eeb704';
+
+function useDarkMode() {
+  const [isDark, setIsDark] = useState(() => 
+    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e) => setIsDark(e.matches);
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  return isDark;
+}
+
 function App() {
+  const isDarkMode = useDarkMode();
+  const mapId = isDarkMode ? DARK_MAP_ID : LIGHT_MAP_ID;
+  const tileUrl = `https://api.maptiler.com/maps/${mapId}/256/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`;
+
   const baseUrl = window.location.hostname
   const [token, setToken] = useState(null)
   const [inputToken, setInputToken] = useState('')
@@ -60,11 +84,11 @@ function App() {
               : user.screenLock,
 
             latitude: data.latitude !== undefined
-              ? { ...user.latitude, value: data.lat }
+              ? { ...user.latitude, value: data.latitude }
               : user.latitude,
 
             longitude: data.longitude !== undefined
-              ? { ...user.longitude, value: data.lon }
+              ? { ...user.longitude, value: data.longitude }
               : user.longitude,
           }
         })
@@ -115,21 +139,25 @@ function App() {
         style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          key={isDarkMode ? 'dark' : 'light'}
+          attribution='&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          url={tileUrl}
         />
-        {users.map(friend => (
-          <Marker key={friend.id} position={[friend.latitude?.value, friend.longitude?.value]}>
-            <Popup>
-              <div>
-              <h3>{friend.name}</h3>
-              <p>🔋 Battery: {friend.batteryStatus?.value}%</p>
-              <p>🌐 Network: {friend.networkStatus?.value}</p>
-              <p>🔒 Screen Lock: {friend.screenLockStatus?.value}</p>
-            </div>
-            </Popup>
-          </Marker>
-        ))}
+        {users
+          .filter(friend => friend.latitude?.value && friend.longitude?.value)
+          .map(friend => (
+            <Marker key={friend.id} position={[friend.latitude.value, friend.longitude.value]}>
+              <Popup>
+                <div>
+                  <h3>{friend.name}</h3>
+                  <p>🔋 Battery: {friend.batteryLevel?.value}%</p>
+                  <p>🌐 Network: {friend.network?.value}</p>
+                  <p>🔒 Screen Lock: {friend.screenLock?.value}</p>
+                </div>
+              </Popup>
+            </Marker>
+          ))
+        }
       </MapContainer>
     </div>
   )
