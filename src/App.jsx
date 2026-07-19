@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
+import VectorTileLayer from './VectorTileLayer'
 
 const CENTER_POSITION = [
   Number(import.meta.env.VITE_CENTER_LAT),
   Number(import.meta.env.VITE_CENTER_LON)
 ];
 
-const MAPTILER_KEY = '7tUeZnzzL7AZQMNHuyuT';
-const DARK_MAP_ID = '019f7bd8-7d1b-7a94-be20-071acedc8033';
-const LIGHT_MAP_ID = '019f7bd9-903b-7e42-b37f-856a42eeb704';
+const MAPTILER_KEY = 'AAoTudUfshT6PEEXAN7y'
+const DARK_MAP_ID = '019f7bd8-7d1b-7a94-be20-071acedc8033'
+const LIGHT_MAP_ID = '019f7bd9-903b-7e42-b37f-856a42eeb704'
 
 function useDarkMode() {
   const [isDark, setIsDark] = useState(() => 
@@ -30,7 +31,7 @@ function useDarkMode() {
 function App() {
   const isDarkMode = useDarkMode();
   const mapId = isDarkMode ? DARK_MAP_ID : LIGHT_MAP_ID;
-  const tileUrl = `https://api.maptiler.com/maps/${mapId}/256/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`;
+  const styleUrl = `https://api.maptiler.com/maps/${mapId}/style.json?key=${MAPTILER_KEY}`;
 
   const baseUrl = window.location.hostname
   const [token, setToken] = useState(null)
@@ -135,14 +136,9 @@ function App() {
       <MapContainer
         center={CENTER_POSITION}
         zoom={13}
-        scrollWheelZoom={false}
         style={{ height: "100%", width: "100%" }}
       >
-        <TileLayer
-          key={isDarkMode ? 'dark' : 'light'}
-          attribution='&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url={tileUrl}
-        />
+        <VectorTileLayer key={isDarkMode ? 'dark' : 'light'} styleUrl={styleUrl} />
         {users
           .filter(friend => friend.latitude?.value && friend.longitude?.value)
           .map(friend => (
