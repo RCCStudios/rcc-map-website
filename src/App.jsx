@@ -6,7 +6,7 @@ import VectorTileLayer from './VectorTileLayer'
 const CENTER_POSITION = [
   Number(import.meta.env.VITE_CENTER_LAT) || 0.0,
   Number(import.meta.env.VITE_CENTER_LON) || 0.0
-];
+]
 
 const MAPTILER_KEY = import.meta.env.VITE_MAPTILER_KEY
 const DARK_MAP_ID = import.meta.env.VITE_DARK_MAP_ID
@@ -15,30 +15,30 @@ const LIGHT_MAP_ID = import.meta.env.VITE_LIGHT_MAP_ID
 function useDarkMode() {
   const [isDark, setIsDark] = useState(() => 
     window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
+  )
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = (e) => setIsDark(e.matches);
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const handleChange = (e) => setIsDark(e.matches)
 
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
 
-  return isDark;
+  return isDark
 }
 
 function App() {
-  const isDarkMode = useDarkMode();
-  const mapId = isDarkMode ? DARK_MAP_ID : LIGHT_MAP_ID;
-  const styleUrl = `https://api.maptiler.com/maps/${mapId}/style.json?key=${MAPTILER_KEY}`;
+  const isDarkMode = useDarkMode()
+  const mapId = isDarkMode ? DARK_MAP_ID : LIGHT_MAP_ID
+  const styleUrl = `https://api.maptiler.com/maps/${mapId}/style.json?key=${MAPTILER_KEY}`
 
   const baseUrl = window.location.host
   // const [token, setToken] = useState(null)
   // const [inputToken, setInputToken] = useState('')
   const [otp, setOtp] = useState(() => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('otp') || null;
+    const params = new URLSearchParams(window.location.search)
+    return params.get('otp') || null
   })
   const [inputOtp, setInputOtp] = useState('')
   const [token, setToken] = useState(null)
@@ -46,7 +46,7 @@ function App() {
   const [logMessage, setLogMessage] = useState('')
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) return
     
     const getTelemetry = async () => {
       try {
@@ -56,6 +56,11 @@ function App() {
             "Authorization": `Bearer ${token}`
           }
         })
+        if (!res.ok) {
+          console.error(`Telemetry error: ${res.status}`)
+          console.log(token)
+          return
+        }
         const data = await response.json()
         setLogMessage("Successfully got telemetry from server")
         setUsers(data)
@@ -67,7 +72,7 @@ function App() {
   }, [token])
 
   useEffect(() => {
-    if (!otp) return;
+    if (!otp) return
     
     const getToken = async () => {
       try {
@@ -88,12 +93,13 @@ function App() {
   }, [otp])
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) return
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
 
-    const wsUrl = `${protocol}://${baseUrl}/api/${protocol}`;
-    const socket = new WebSocket(wsUrl, [`bearer.${token}`]);
+    const cleanToken = String(token).trim();
+    const wsUrl = `${protocol}://${baseUrl}/api/${protocol}`
+    const socket = new WebSocket(wsUrl, [`bearer.${cleanToken}`])
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data)
@@ -130,7 +136,7 @@ function App() {
 
     return () => {
       socket.close()
-    };
+    }
   }, [token])
 
   const handleLogin = async (e) => {
