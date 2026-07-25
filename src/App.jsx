@@ -92,10 +92,8 @@ function App() {
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
 
-    const cleanToken = token.trim();
-
     const wsUrl = `${protocol}://${baseUrl}/api/${protocol}`;
-    const socket = new WebSocket(wsUrl, [`bearer.${cleanToken}`]);
+    const socket = new WebSocket(wsUrl, [`bearer.${token}`]);
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data)
