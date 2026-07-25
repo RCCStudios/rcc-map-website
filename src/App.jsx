@@ -90,7 +90,7 @@ function App() {
   useEffect(() => {
     if (!token) return
 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
 
     const cleanToken = String(token).trim();
     const wsUrl = `${protocol}://${baseUrl}/api/${protocol}`
