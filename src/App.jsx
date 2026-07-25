@@ -145,6 +145,12 @@ function App() {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#f0f2f5' }}>
         <form onSubmit={handleLogin} style={{ padding: '20px', background: 'white', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
           <h2>Welcome to RCC Map</h2>
+          {/* KOLHOZANSTVO DEBUG */}
+          <h2>{`${CENTER_POSITION}`}</h2>
+          <h2>{`${MAPTILER_KEY}`}</h2>
+          <h2>{`${DARK_MAP_ID}`}</h2>
+          <h2>{`${LIGHT_MAP_ID}`}</h2>
+          {/* KOLHOZANSTVO DEBUG */}
           {logMessage && <p style={{ color: logMessage.includes("Error") ? "red" : "blue", textAlign: 'center', maxWidth: '256px' }}>{logMessage}</p>}
           <div style={{ marginBottom: '15px' }}>
             <input 
