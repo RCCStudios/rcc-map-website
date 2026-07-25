@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import VectorTileLayer from './VectorTileLayer'
 
 const CENTER_POSITION = [
-  Number(import.meta.env.VITE_CENTER_LAT),
-  Number(import.meta.env.VITE_CENTER_LON)
+  Number(import.meta.env.VITE_CENTER_LAT) || 0.0,
+  Number(import.meta.env.VITE_CENTER_LON) || 0.0
 ];
 
-const MAPTILER_KEY = 'AAoTudUfshT6PEEXAN7y'
-const DARK_MAP_ID = '019f7bd8-7d1b-7a94-be20-071acedc8033'
-const LIGHT_MAP_ID = '019f7bd9-903b-7e42-b37f-856a42eeb704'
+const MAPTILER_KEY = import.meta.env.VITE_MAPTILER_KEY
+const DARK_MAP_ID = import.meta.env.VITE_DARK_MAP_ID
+const LIGHT_MAP_ID = import.meta.env.VITE_LIGHT_MAP_ID
 
 function useDarkMode() {
   const [isDark, setIsDark] = useState(() => 
@@ -33,11 +33,17 @@ function App() {
   const mapId = isDarkMode ? DARK_MAP_ID : LIGHT_MAP_ID;
   const styleUrl = `https://api.maptiler.com/maps/${mapId}/style.json?key=${MAPTILER_KEY}`;
 
-  const baseUrl = window.location.hostname
+  const baseUrl = window.location.host
+  // const [token, setToken] = useState(null)
+  // const [inputToken, setInputToken] = useState('')
+  const [otp, setOtp] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('otp') || null;
+  })
+  const [inputOtp, setInputOtp] = useState('')
   const [token, setToken] = useState(null)
-  const [inputToken, setInputToken] = useState('')
   const [users, setUsers] = useState([])
-  const [error, setError] = useState('')
+  const [logMessage, setLogMessage] = useState('')
 
   useEffect(() => {
     if (!token) return;
@@ -51,19 +57,45 @@ function App() {
           }
         })
         const data = await response.json()
+        setLogMessage("Successfully got telemetry from server")
         setUsers(data)
       } catch (e) {
-        setError(e)
+        setLogMessage(`Get Telemetry Error: ${e}`)
       }
     }
     getTelemetry()
   }, [token])
 
   useEffect(() => {
+    if (!otp) return;
+    
+    const getToken = async () => {
+      try {
+        const url = `https://${baseUrl}/api/getToken`
+        const response = await fetch(url, {
+          headers: {
+            "Authorization": `Bearer ${otp}`
+          }
+        })
+        const data = await response.json()
+        setLogMessage("Successfully got token from server")
+        setToken(data)
+      } catch (e) {
+        setLogMessage(`Get OTP Error: ${e}`)
+      }
+    }
+    getToken()
+  }, [otp])
+
+  useEffect(() => {
     if (!token) return;
 
-    const wsUrl = `wss://${baseUrl}/api/ws`;
-    const socket = new WebSocket(wsUrl, [`bearer.${token}`]);
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+
+    const cleanToken = token.trim();
+
+    const wsUrl = `${protocol}://${baseUrl}/api/${protocol}`;
+    const socket = new WebSocket(wsUrl, [`bearer.${cleanToken}`]);
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data)
@@ -96,7 +128,7 @@ function App() {
       })
     }
 
-    socket.onerror = (e) => { setError(e) }
+    socket.onerror = (e) => { setLogMessage(`WS Error: ${e}`) }
 
     return () => {
       socket.close()
@@ -105,22 +137,22 @@ function App() {
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    setError('')
-    setToken(inputToken)
+    setLogMessage('')
+    setOtp(inputOtp)
   } 
 
-  if (!token) {
+  if (!otp || !token) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#f0f2f5' }}>
         <form onSubmit={handleLogin} style={{ padding: '20px', background: 'white', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
           <h2>Welcome to RCC Map</h2>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+          {logMessage && <p style={{ color: logMessage.includes("Error") ? "red" : "blue", textAlign: 'center', maxWidth: '256px' }}>{logMessage}</p>}
           <div style={{ marginBottom: '15px' }}>
             <input 
               type="text" 
-              placeholder="token" 
-              value={inputToken}
-              onChange={(e) => setInputToken(e.target.value)}
+              placeholder="Enter OTP" 
+              value={inputOtp}
+              onChange={(e) => setInputOtp(e.target.value)}
               style={{ padding: '8px', width: '200px' }}
               required 
             />
