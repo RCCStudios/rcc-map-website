@@ -56,7 +56,7 @@ function App() {
             "Authorization": `Bearer ${token}`
           }
         })
-        if (!res.ok) {
+        if (!response.ok) {
           console.error(`Telemetry error: ${res.status}`)
           console.log(token)
           return
@@ -82,6 +82,11 @@ function App() {
             "Authorization": `Bearer ${otp}`
           }
         })
+        if (!response.ok) {
+          console.error(`Telemetry error: ${res.status}`)
+          console.log(token)
+          return
+        }
         const data = await response.json()
         setLogMessage("Successfully got token from server")
         setToken(data)
