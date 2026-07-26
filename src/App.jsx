@@ -12,9 +12,9 @@ const MAPTILER_KEY = import.meta.env.VITE_MAPTILER_KEY
 const DARK_MAP_ID = import.meta.env.VITE_DARK_MAP_ID
 const LIGHT_MAP_ID = import.meta.env.VITE_LIGHT_MAP_ID
 
-function formatUnixTimestamp() {
-  var date = new Date(unix_timestamp * 1000)
-  var formattedTimestamp = d.getDate() + '/' + (d.getMonth()) + '/' + d.getFullYear() + " " + d.getHours() + ':' + d.getMinutes()
+function formatUnixTimestamp(unixTimestamp) {
+  var date = new Date(unixTimestamp * 1000)
+  var formattedTimestamp = date.getDate() + '/' + (date.getMonth()) + '/' + date.getFullYear() + " " + date.getHours() + ':' + date.getMinutes()
   return formattedTimestamp
 }
 
