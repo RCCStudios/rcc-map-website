@@ -12,6 +12,12 @@ const MAPTILER_KEY = import.meta.env.VITE_MAPTILER_KEY
 const DARK_MAP_ID = import.meta.env.VITE_DARK_MAP_ID
 const LIGHT_MAP_ID = import.meta.env.VITE_LIGHT_MAP_ID
 
+function formatUnixTimestamp() {
+  var date = new Date(unix_timestamp * 1000)
+  var formattedTimestamp = d.getDate() + '/' + (d.getMonth()) + '/' + d.getFullYear() + " " + d.getHours() + ':' + d.getMinutes()
+  return formattedTimestamp
+}
+
 function useDarkMode() {
   const [isDark, setIsDark] = useState(() => 
     window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -171,15 +177,18 @@ function App() {
       >
         <VectorTileLayer key={isDarkMode ? 'dark' : 'light'} styleUrl={styleUrl} />
         {users
-          .filter(friend => friend.latitude?.value && friend.longitude?.value)
-          .map(friend => (
-            <Marker key={friend.id} position={[friend.latitude.value, friend.longitude.value]}>
+          .filter(user => user.latitude?.value && user.longitude?.value)
+          .map(user => (
+            <Marker key={user.id} position={[user.latitude.value, user.longitude.value]}>
               <Popup>
                 <div>
-                  <h3>{friend.name}</h3>
-                  <p>🔋 Battery: {friend.batteryLevel?.value}%</p>
-                  <p>🌐 Network: {friend.network?.value}</p>
-                  <p>🔒 Screen Lock: {friend.screenLock?.value}</p>
+                  <h3>{user.name}</h3>
+                  <p>🔋 Battery: {user.batteryLevel?.value}%</p>
+                  <p>{formatUnixTimestamp(user.batteryLevel?.timestamp)}</p>
+                  <p>🌐 Network: {user.network?.value}</p>
+                  <p>{formatUnixTimestamp(user.network?.timestamp)}</p>
+                  <p>🔒 Screen Lock: {user.screenLock?.value}</p>
+                  <p>{formatUnixTimestamp(user.screenLock?.timestamp)}</p>
                 </div>
               </Popup>
             </Marker>
