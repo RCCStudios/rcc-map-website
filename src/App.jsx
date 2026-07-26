@@ -14,8 +14,14 @@ const LIGHT_MAP_ID = import.meta.env.VITE_LIGHT_MAP_ID
 
 function formatUnixTimestamp(unixTimestamp) {
   var date = new Date(unixTimestamp * 1000)
-  var formattedTimestamp = date.getDate() + '/' + (date.getMonth()) + '/' + date.getFullYear() + " " + date.getHours() + ':' + date.getMinutes()
-  return formattedTimestamp
+  var day = String(date.getDate()).padStart(2, '0');
+  var month = String(date.getMonth() + 1).padStart(2, '0');
+  var year = date.getFullYear();
+
+  var hours = String(date.getHours()).padStart(2, '0');
+  var minutes = String(date.getMinutes()).padStart(2, '0');
+
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
 }
 
 function useDarkMode() {
