@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import L from 'leaflet'
-import 'leaflet/dist/leaflet.css'
-import VectorTileLayer from './VectorTileLayer'
+import { useState, useEffect } from "react"
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
+import L from "leaflet"
+import "leaflet/dist/leaflet.css"
+import VectorTileLayer from "./VectorTileLayer"
 
 const CENTER_POSITION = [
   Number(import.meta.env.VITE_CENTER_LAT) || 0.0,
@@ -14,29 +14,49 @@ const DARK_MAP_ID = import.meta.env.VITE_DARK_MAP_ID;
 const LIGHT_MAP_ID = import.meta.env.VITE_LIGHT_MAP_ID;
 
 function formatUnixTimestamp(unixTimestamp) {
-  if (!unixTimestamp) return 'N/A';
-  var date = new Date(unixTimestamp * 1000);
-  var day = String(date.getDate()).padStart(2, '0');
-  var month = String(date.getMonth() + 1).padStart(2, '0');
+  if (!unixTimestamp) return "N/A";
+  var currentDate = new Date(Date.now())
+  var currentDay = String(currentDate.getDate()).padStart(2, "0");
+  var currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0");
+  var currentYear = currentDate.getFullYear();
+  var date = new Date(unixTimestamp * 1000); // fix to ms
+  var day = String(date.getDate()).padStart(2, "0");
+  var month = String(date.getMonth() + 1).padStart(2, "0");
   var year = date.getFullYear();
 
-  var hours = String(date.getHours()).padStart(2, '0');
-  var minutes = String(date.getMinutes()).padStart(2, '0');
+  var hours = String(date.getHours()).padStart(2, "0");
+  var minutes = String(date.getMinutes()).padStart(2, "0");
 
-  return `${day}/${month}/${year} ${hours}:${minutes}`;
+  return `${day}/${month}/${year}` === `${currentDay}/${currentMonth}/${currentYear}`
+    ? `${hours}:${minutes}`
+    : `${day}/${month}/${year} ${hours}:${minutes}`;
+}
+
+function formatNetworkStatus(networkStatus) {
+  switch (networkStatus) {
+    case 1:
+      return "Wi-Fi";
+    case 2:
+      return "Ethernet";
+    case 3:
+      return "Cellular";
+    case 0:
+    default:
+      return "Unknown";
+  }
 }
 
 function useDarkMode() {
   const [isDark, setIsDark] = useState(() => 
-    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+    window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
   );
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
     const handleChange = (e) => setIsDark(e.matches)
 
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
+    mediaQuery.addEventListener("change", handleChange)
+    return () => mediaQuery.removeEventListener("change", handleChange)
   }, []);
 
   return isDark;
@@ -50,19 +70,19 @@ function App() {
   const baseUrl = window.location.host;
   const [otp, setOtp] = useState(() => {
     const params = new URLSearchParams(window.location.search);
-    return params.get('otp') || null;
+    return params.get("otp") || null;
   });
-  const [inputOtp, setInputOtp] = useState('');
+  const [inputOtp, setInputOtp] = useState("");
   const [token, setToken] = useState(null);
   const [users, setUsers] = useState([]);
-  const [logMessage, setLogMessage] = useState('');
+  const [logMessage, setLogMessage] = useState("");
 
   useEffect(() => {
     if (!otp) return;
     
     const getToken = async () => {
       try {
-        const url = "/api/getToken" //`https://${baseUrl}/api/getToken`;
+        const url = "/api/getToken" // `https://${baseUrl}/api/getToken`;
         const response = await fetch(url, {
           headers: {
             "Authorization": `Bearer ${otp}`
@@ -83,7 +103,7 @@ function App() {
     
     const getTelemetry = async () => {
       try {
-        const url = "api/getTelemetry" //`https://${baseUrl}/api/getTelemetry`;
+        const url = "/api/getTelemetry" // `https://${baseUrl}/api/getTelemetry`;
         const response = await fetch(url, {
           headers: {
             "Authorization": `Bearer ${token}`
@@ -102,7 +122,7 @@ function App() {
   useEffect(() => {
     if (!token) return;
 
-    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
 
     const cleanToken = String(token).trim();
     const wsUrl = `${protocol}://${baseUrl}/api/${protocol}`;
@@ -169,34 +189,34 @@ function App() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLogMessage('');
+    setLogMessage("");
     setOtp(inputOtp);
   };
 
   if (!otp || !token) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#f0f2f5' }}>
-        <form onSubmit={handleLogin} style={{ padding: '20px', background: 'white', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", background: "#f0f2f5" }}>
+        <form onSubmit={handleLogin} style={{ padding: "20px", background: "white", borderRadius: "8px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
           <h2>Welcome to RCC Map</h2>
-          {logMessage && <p style={{ color: logMessage.includes("Error") ? "red" : "blue", textAlign: 'center', maxWidth: '256px' }}>{logMessage}</p>}
-          <div style={{ marginBottom: '15px' }}>
+          {logMessage && <p style={{ color: logMessage.includes("Error") ? "red" : "blue", textAlign: "center", maxWidth: "256px" }}>{logMessage}</p>}
+          <div style={{ marginBottom: "15px" }}>
             <input 
               type="text" 
               placeholder="Enter OTP" 
               value={inputOtp}
               onChange={(e) => setInputOtp(e.target.value)}
-              style={{ padding: '8px', width: '200px' }}
+              style={{ padding: "8px", width: "200px" }}
               required 
             />
           </div>
-          <button type="submit" style={{ padding: '8px 16px', cursor: 'pointer' }}>Login</button>
+          <button type="submit" style={{ padding: "8px 16px", cursor: "pointer" }}>Login</button>
         </form>
       </div>
     );
   };
 
   const getStatusBadgeColor = (user) => {
-    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const currentTimestamp = Math.floor(Date.now() / 1000); // fix to ms
     const timeTo = 300;
 
     const timestamps = [
@@ -244,7 +264,7 @@ function App() {
         ">
           ${avatarPath ?
               `<img src="${avatarPath}" style="width: 100%; height: 100%; object-fit: cover;" />` :
-              ( user.name ? user.name.charAt(0).toUpperCase() : '?' )
+              ( user.name ? user.name.charAt(0).toUpperCase() : "?" )
           }
         </div>
         <div style="
@@ -275,7 +295,7 @@ function App() {
         zoom={13}
         style={{ height: "100%", width: "100%" }}
       >
-        <VectorTileLayer key={isDarkMode ? 'dark' : 'light'} styleUrl={styleUrl} />
+        <VectorTileLayer key={isDarkMode ? "dark" : "light"} styleUrl={styleUrl} />
         {users
           .filter(user => user.latitude?.value && user.longitude?.value)
           .map(user => {
@@ -287,15 +307,61 @@ function App() {
                 position={[user.latitude?.value, user.longitude?.value]}
                 icon={customIcon}
               >
-                <Popup>
-                  <div>
-                    <h3>{user.name}</h3>
-                    <p>🔋 Battery: {user.batteryLevel?.value}%</p>
-                    <p>{formatUnixTimestamp(user.batteryLevel?.timestamp)}</p>
-                    <p>🌐 Network: {user.network?.value}</p>
-                    <p>{formatUnixTimestamp(user.network?.timestamp)}</p>
-                    <p>🔒 Screen Lock: {user.screenLock?.value}</p>
-                    <p>{formatUnixTimestamp(user.screenLock?.timestamp)}</p>
+                <Popup className="custom-popup">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px", paddingTop: "12px" }}>
+                    <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "bold", color: "#111" }}>
+                      {user.name}
+                    </h3>
+                  </div>
+                  <div style={{ paddingBottom: "8px", display: "flex", flex: "row", justifyContent: "space-between", alignItems: "center", gap: "6px" }}>
+                    <span style={{
+                      fontSize: "10px",
+                      padding: "2px 6px",
+                      borderRadius: "10px",
+                      fontWeight: "bold",
+                      backgroundColor: user.screenLock?.value ? "#f1f3f5" : "#e6fcf5",
+                      color: user.screenLock?.value ? "#495057" : "#0ca678",
+                      border: `1px solid ${user.screenLock?.value ? "#ced4da" : "#96f2d7"}`
+                    }}>
+                      {user.screenLock?.value ? "🔒 Locked" : "🔓 Unlocked"}
+                    </span>
+                    <div style={{ fontSize: "10px", color: "#888" }}>
+                      {formatUnixTimestamp(user.screenLock?.timestamp)}
+                    </div>
+                  </div>
+
+                  <hr style={{ border: "none", borderTop: "1px solid #eee", margin: "8px 0" }} />
+
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
+                    <span style={{ fontSize: "13px", color: "#555", display: "flex", alignItems: "center", gap: "6px", paddingRight: "8px" }}>
+                      🔋 Battery
+                    </span>
+                    <div style={{ textAlign: "right" }}>
+                      <span style={{ 
+                        fontSize: "13px", 
+                        fontWeight: "bold", 
+                        color: user.batteryLevel?.value < 20 ? "#c4192a" : ( user.batteryLevel?.value > 80 ? "#20a13e" : "#ddaa12" ) 
+                      }}>
+                        {user.batteryLevel?.value ?? "N/A"}%
+                      </span>
+                      <div style={{ fontSize: "10px", color: "#888" }}>
+                        {formatUnixTimestamp(user.batteryLevel?.timestamp)}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <span style={{ fontSize: "13px", color: "#555", display: "flex", alignItems: "center", gap: "6px", paddingRight: "8px" }}>
+                      🌐 Network
+                    </span>
+                    <div style={{ textAlign: "right" }}>
+                      <span style={{ fontSize: "13px", fontWeight: "bold", color: "#333" }}>
+                        {formatNetworkStatus(user.network?.value) ?? "Unknown"}
+                      </span>
+                      <div style={{ fontSize: "10px", color: "#888" }}>
+                        {formatUnixTimestamp(user.network?.timestamp)}
+                      </div>
+                    </div>
                   </div>
                 </Popup>
               </Marker>
