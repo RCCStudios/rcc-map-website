@@ -17,17 +17,19 @@ export function formatUnixTimestamp(unixTimestamp) {
         : `${day}/${month}/${year} ${hours}:${minutes}`;
 }
 
-export function formatNetworkStatus(networkStatus) {
+export function formatNetworkStatus(networkStatus, t) {
+    if (!t) return "N/A";
+    
     switch (networkStatus) {
         case 1:
-            return "Wi-Fi";
+            return t('status.network.wi-fi');
         case 2:
-            return "Ethernet";
+            return t('status.network.ethernet');
         case 3:
-            return "Cellular";
+            return t('status.network.cellular');
         case 0:
         default:
-            return "Unknown";
+            return t('status.network.unknown');
     }
 }
 

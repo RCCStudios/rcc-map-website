@@ -1,8 +1,11 @@
 import { Popup } from "react-leaflet";
 import { Menu, ChevronLeft, Search, Lock, Unlock, Battery, Network } from "lucide-react";
 import { formatUnixTimestamp, formatNetworkStatus } from "../utils/formatters";
+import { useTranslation } from "react-i18next";
 
 export default function UserPopup({ user }) {
+    const { t, i18n } = useTranslation();
+
     return ( 
         <Popup className="custom-popup">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px", paddingTop: "12px" }}>
@@ -24,8 +27,8 @@ export default function UserPopup({ user }) {
                     border: `1px solid ${user.screenLock?.value ? "#ced4da" : "#96f2d7"}`
                 }}>
                     {user.screenLock?.value
-                        ? <><Lock size={12} />Locked</>
-                        : <><Lock size={12} />Unlocked</>
+                        ? <><Lock size={12} />{t('status.screen_lock.locked')}</>
+                        : <><Lock size={12} />{t('status.screen_lock.unlocked')}</>
                     }
                 </span>
                 <div style={{ fontSize: "10px", color: "#888" }}>
@@ -38,7 +41,7 @@ export default function UserPopup({ user }) {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
                 <span style={{ fontSize: "13px", color: "#555", display: "flex", alignItems: "center", gap: "4px", paddingRight: "8px" }}>
                     <Battery size={16} />
-                    Battery
+                    {t('status.battery')}
                 </span>
                 <div style={{ textAlign: "right" }}>
                     <span style={{ 
@@ -57,11 +60,11 @@ export default function UserPopup({ user }) {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <span style={{ fontSize: "13px", color: "#555", display: "flex", alignItems: "center", gap: "4px", paddingRight: "8px" }}>
                     <Network size={16} />
-                    Network
+                    {t('status.network.title')}
                 </span>
                 <div style={{ textAlign: "right" }}>
                     <span style={{ fontSize: "13px", fontWeight: "bold", color: "#333" }}>
-                    {formatNetworkStatus(user.network?.value) ?? "Unknown"}
+                    {formatNetworkStatus(user.network?.value, t) ?? t('status.network.unknown')}
                     </span>
                     <div style={{ fontSize: "10px", color: "#888" }}>
                     {formatUnixTimestamp(user.network?.timestamp)}

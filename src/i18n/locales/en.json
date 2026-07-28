@@ -1,0 +1,26 @@
+{
+    "login": {
+        "title": "Welcome to RCC Map",
+        "subtitle": "Enter your OTP code to login",
+        "placeholder": "Enter OTP code",
+        "button": "Sign in"
+    },
+    "sidebar": {
+        "title": "Users",
+        "search": "Search user..."
+    },
+    "status": {
+        "battery": "Battery",
+        "network": {
+            "title": "Network",
+            "unknown": "Unknown",
+            "wi-fi": "Wi-Fi",
+            "ethernet": "Ethernet",
+            "cellular": "Cellular"
+        },
+        "screen_lock": {
+            "locked": "Locked",
+            "unlocked": "Unlocked"
+        }
+    }
+}

@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Menu, ChevronLeft, Search, Lock, Unlock, Battery, Network } from "lucide-react";
 import { getStatusBadgeColor, formatNetworkStatus } from "../utils/formatters";
+import { useTranslation } from "react-i18next";
 
 export default function Sidebar({ users, onSelectUser }) {
+    const { t, i18n } = useTranslation();
+
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -52,13 +55,13 @@ export default function Sidebar({ users, onSelectUser }) {
                 padding: "16px",
                 boxSizing: "border-box"
             }}>
-                <h2 style={{ margin: "0 0 16px 0", fontSize: "20px" }}>Users: ({users.length})</h2>
+                <h2 style={{ margin: "0 0 16px 0", fontSize: "20px" }}>{t('sidebar.title')}: ({users.length})</h2>
 
                 <div style={{ position: "relative", marginBottom: "16px" }}>
                     <Search size={16} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#999" }} />
                     <input 
                         type="text" 
-                        placeholder="Search user..."
+                        placeholder={t('sidebar.search')}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         style={{
@@ -139,8 +142,8 @@ export default function Sidebar({ users, onSelectUser }) {
                                             gap: "4px"
                                         }}>
                                             {user.screenLock?.value 
-                                                ? <><Lock size={12} /> Locked</> 
-                                                : <><Unlock size={12} color="#10b981" /> Unlocked</>
+                                                ? <><Lock size={12} /> {t('status.screen_lock.locked')}</> 
+                                                : <><Unlock size={12} color="#10b981" /> {t('status.screen_lock.unlocked')}</>
                                             }
                                         </div>
                                     </div>
@@ -160,7 +163,7 @@ export default function Sidebar({ users, onSelectUser }) {
                                     </div>
                                     <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                                         <Network size={14} />
-                                        {formatNetworkStatus(user.network?.value)}
+                                        {formatNetworkStatus(user.network?.value, t)}
                                     </div>
                                 </div>
                             </div>
