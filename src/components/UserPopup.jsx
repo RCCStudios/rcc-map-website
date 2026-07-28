@@ -1,4 +1,5 @@
 import { Popup } from "react-leaflet";
+import { Menu, ChevronLeft, Search, Lock, Unlock, Battery, Network } from "lucide-react";
 import { formatUnixTimestamp, formatNetworkStatus } from "../utils/formatters";
 
 export default function UserPopup({ user }) {
@@ -15,11 +16,17 @@ export default function UserPopup({ user }) {
                     padding: "2px 6px",
                     borderRadius: "10px",
                     fontWeight: "bold",
+                    gap: "4px",
+                    display: "flex",
+                    alignItems: "center",
                     backgroundColor: user.screenLock?.value ? "#f1f3f5" : "#e6fcf5",
                     color: user.screenLock?.value ? "#495057" : "#0ca678",
                     border: `1px solid ${user.screenLock?.value ? "#ced4da" : "#96f2d7"}`
                 }}>
-                    {user.screenLock?.value ? "🔒 Locked" : "🔓 Unlocked"}
+                    {user.screenLock?.value
+                        ? <><Lock size={12} />Locked</>
+                        : <><Lock size={12} />Unlocked</>
+                    }
                 </span>
                 <div style={{ fontSize: "10px", color: "#888" }}>
                     {formatUnixTimestamp(user.screenLock?.timestamp)}
@@ -29,26 +36,28 @@ export default function UserPopup({ user }) {
             <hr style={{ border: "none", borderTop: "1px solid #eee", margin: "8px 0" }} />
 
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
-                <span style={{ fontSize: "13px", color: "#555", display: "flex", alignItems: "center", gap: "6px", paddingRight: "8px" }}>
-                    🔋 Battery
+                <span style={{ fontSize: "13px", color: "#555", display: "flex", alignItems: "center", gap: "4px", paddingRight: "8px" }}>
+                    <Battery size={16} />
+                    Battery
                 </span>
                 <div style={{ textAlign: "right" }}>
                     <span style={{ 
-                    fontSize: "13px", 
-                    fontWeight: "bold", 
-                    color: user.batteryLevel?.value < 20 ? "#c4192a" : ( user.batteryLevel?.value > 80 ? "#20a13e" : "#ddaa12" ) 
+                        fontSize: "13px", 
+                        fontWeight: "bold", 
+                        color: user.batteryLevel?.value < 20 ? "#c4192a" : ( user.batteryLevel?.value > 80 ? "#20a13e" : "#ddaa12" ) 
                     }}>
-                    {user.batteryLevel?.value ?? "N/A"}%
+                        {user.batteryLevel?.value ?? "N/A"}%
                     </span>
                     <div style={{ fontSize: "10px", color: "#888" }}>
-                    {formatUnixTimestamp(user.batteryLevel?.timestamp)}
+                        {formatUnixTimestamp(user.batteryLevel?.timestamp)}
                     </div>
                 </div>
             </div>
 
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <span style={{ fontSize: "13px", color: "#555", display: "flex", alignItems: "center", gap: "6px", paddingRight: "8px" }}>
-                    🌐 Network
+                <span style={{ fontSize: "13px", color: "#555", display: "flex", alignItems: "center", gap: "4px", paddingRight: "8px" }}>
+                    <Network size={16} />
+                    Network
                 </span>
                 <div style={{ textAlign: "right" }}>
                     <span style={{ fontSize: "13px", fontWeight: "bold", color: "#333" }}>

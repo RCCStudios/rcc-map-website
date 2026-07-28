@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { getStatusBadgeColor } from "../utils/formatters";
+import { Menu, ChevronLeft, Search, Lock, Unlock, Battery, Network } from "lucide-react";
+import { getStatusBadgeColor, formatNetworkStatus } from "../utils/formatters";
 
 export default function Sidebar({ users, onSelectUser }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -14,21 +15,25 @@ export default function Sidebar({ users, onSelectUser }) {
             <button 
                 onClick={() => setIsOpen(!isOpen)}
                 style={{
-                position: "absolute",
-                top: "16px",
-                left: isOpen ? "316px" : "16px",
-                zIndex: 1000,
-                background: "white",
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                padding: "8px 12px",
-                cursor: "pointer",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                transition: "left 0.3s ease",
-                fontWeight: "bold"
+                    position: "absolute",
+                    top: "16px",
+                    left: isOpen ? "316px" : "16px",
+                    zIndex: 1000,
+                    background: "white",
+                    border: "1px solid #e0e0e0",
+                    borderRadius: "8px",
+                    width: "40px",
+                    height: "40px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
+                    transition: "left 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    color: "#333"
                 }}
             >
-                {isOpen ? "◀" : "☰"}
+                {isOpen ? <ChevronLeft size={20} /> : <Menu size={20} />}
             </button>
 
             <div style={{
@@ -39,9 +44,9 @@ export default function Sidebar({ users, onSelectUser }) {
                 height: "100%",
                 backgroundColor: "white",
                 zIndex: 999,
-                boxShadow: "2px 0 12px rgba(0,0,0,0.15)",
+                boxShadow: "2px 0 12px rgba(0,0,0,0.08)",
                 transform: isOpen ? "translateX(0)" : "translateX(-100%)",
-                transition: "transform 0.3s ease",
+                transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 display: "flex",
                 flexDirection: "column",
                 padding: "16px",
@@ -49,19 +54,24 @@ export default function Sidebar({ users, onSelectUser }) {
             }}>
                 <h2 style={{ margin: "0 0 16px 0", fontSize: "20px" }}>Users: ({users.length})</h2>
 
-                <input 
-                    type="text" 
-                    placeholder="Search user..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{
-                        padding: "8px 12px",
-                        borderRadius: "6px",
-                        border: "1px solid #ccc",
-                        marginBottom: "16px",
-                        outline: "none"
-                    }}
-                />
+                <div style={{ position: "relative", marginBottom: "16px" }}>
+                    <Search size={16} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#999" }} />
+                    <input 
+                        type="text" 
+                        placeholder="Search user..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{
+                            width: "100%",
+                            padding: "8px 12px 8px 34px",
+                            borderRadius: "8px",
+                            border: "1px solid #ddd",
+                            outline: "none",
+                            fontSize: "14px",
+                            boxSizing: "border-box"
+                        }}
+                    />
+                </div>
 
                 <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: "8px" }}>
                     {filteredUsers.map(user => {
@@ -88,16 +98,17 @@ export default function Sidebar({ users, onSelectUser }) {
                                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                                     <div style={{ position: "relative", width: "32px", height: "32px" }}>
                                         <div style={{
-                                            width: "32px",
-                                            height: "32px",
+                                            backgroundColor: "white",
+                                            border: "2px solid black",
                                             borderRadius: "50%",
-                                            backgroundColor: "#e0e0e0",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
+                                            width: "30px",
+                                            height: "30px",
                                             overflow: "hidden",
+                                            boxShadow: "0 3px 6px rgba(0,0,0,0.3)",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
                                             fontWeight: "bold",
-                                            fontSize: "14px"
                                         }}>
                                             {user.pfpPath 
                                                 ? <img src={user.pfpPath} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -106,13 +117,13 @@ export default function Sidebar({ users, onSelectUser }) {
                                         </div>
                                         <div style={{
                                             position: "absolute",
-                                            bottom: "-2px",
-                                            right: "-2px",
+                                            bottom: "-3px",
+                                            right: "-3px",
+                                            border: "1px solid black",
+                                            borderRadius: "50%",
                                             width: "8px",
                                             height: "8px",
-                                            borderRadius: "50%",
-                                            backgroundColor: badgeColor,
-                                            border: "1px solid white"
+                                            backgroundColor: badgeColor
                                         }} />
                                     </div>
 
@@ -120,14 +131,37 @@ export default function Sidebar({ users, onSelectUser }) {
                                         <div style={{ fontWeight: "bold", fontSize: "14px", color: "#333" }}>
                                             {user.name}
                                         </div>
-                                        <div style={{ fontSize: "11px", color: "#777" }}>
-                                            {user.screenLock?.value ? "🔒 Locked" : "🔓 Unlocked"}
+                                        <div style={{
+                                            fontSize: "12px",
+                                            color: `${user.screenLock?.value ? "#495057" : "#0ca678"}`,
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: "4px"
+                                        }}>
+                                            {user.screenLock?.value 
+                                                ? <><Lock size={12} /> Locked</> 
+                                                : <><Unlock size={12} color="#10b981" /> Unlocked</>
+                                            }
                                         </div>
                                     </div>
                                 </div>
-
-                                <div style={{ textAlign: "right", fontSize: "12px", fontWeight: "bold", color: "#555" }}>
-                                    🔋 {user.batteryLevel?.value ?? "N/A"}%
+                                <div style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "flex-end",
+                                    gap: "4px",
+                                    fontSize: "13px",
+                                    fontWeight: "600",
+                                    color: "#475569"
+                                }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                                        <Battery size={14} />
+                                        {user.batteryLevel?.value ?? "N/A"}%
+                                    </div>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                                        <Network size={14} />
+                                        {formatNetworkStatus(user.network?.value)}
+                                    </div>
                                 </div>
                             </div>
                         );
