@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react"
-import { MapContainer, Marker, ZoomControl } from "react-leaflet"
-import "leaflet/dist/leaflet.css"
+import { useState, useEffect } from "react";
+import { MapContainer, Marker, ZoomControl } from "react-leaflet";
+import { KeyRound, LogIn, AlertCircle, CheckCircle2 } from "lucide-react";
+import "leaflet/dist/leaflet.css";
 
-import VectorTileLayer from "./components/VectorTileLayer"
-import Sidebar from "./components/Sidebar"
-import UserPopup from "./components/UserPopup"
-import MapFlyController from "./components/MapFlyController"
+import VectorTileLayer from "./components/VectorTileLayer";
+import Sidebar from "./components/Sidebar";
+import UserPopup from "./components/UserPopup";
+import MapFlyController from "./components/MapFlyController";
 
-import { useDarkMode } from "./hooks/useDarkMode"
-import { createUserIcon } from "./utils/userIcons"
+import { useDarkMode } from "./hooks/useDarkMode";
+import { createUserIcon } from "./utils/userIcons";
 
 const CENTER_POSITION = [
   Number(import.meta.env.VITE_CENTER_LAT) || 0.0,
@@ -155,22 +156,132 @@ function App() {
   };
 
   if (!token) {
+    const isError = logMessage.toLowerCase().includes("error");
+
     return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", background: "#f0f2f5" }}>
-        <form onSubmit={handleLogin} style={{ padding: "20px", background: "white", borderRadius: "8px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
-          <h2>Welcome to RCC Map</h2>
-          {logMessage && <p style={{ color: logMessage.includes("Error") ? "red" : "blue", textAlign: "center", maxWidth: "256px" }}>{logMessage}</p>}
-          <div style={{ marginBottom: "15px" }}>
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        width: "100vw",
+        background: "radial-gradient(circle at center, #1e293b 0%, #0f172a 100%)",
+        fontFamily: "system-ui, -apple-system, sans-serif"
+      }}>
+        <form 
+          onSubmit={handleLogin} 
+          style={{
+            background: "rgba(255, 255, 255, 0.98)",
+            backdropFilter: "blur(10px)",
+            padding: "32px 28px",
+            borderRadius: "16px",
+            boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3)",
+            width: "100%",
+            maxWidth: "360px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            boxSizing: "border-box"
+          }}
+        >
+          <div style={{
+            width: "64px",
+            height: "64px",
+            borderRadius: "12px",
+            background: "#f1f5f9",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: "16px",
+            color: "#0f172a"
+          }}>
+            <img 
+              src="/rcc_map.svg" 
+              alt="RCC Logo" 
+              style={{ width: "48px", height: "48px" }} 
+            />
+          </div>
+
+          <h2 style={{ margin: "0 0 6px 0", fontSize: "20px", fontWeight: "700", color: "#0f172a" }}>
+            Welcome to RCC Map
+          </h2>
+          <p style={{ margin: "0 0 24px 0", fontSize: "13px", color: "#64748b", textAlign: "center" }}>
+            Enter your OTP code to login
+          </p>
+
+          {logMessage && (
+            <div style={{
+              width: "100%",
+              padding: "10px 12px",
+              borderRadius: "8px",
+              marginBottom: "16px",
+              fontSize: "13px",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              boxSizing: "border-box",
+              background: isError ? "#fef2f2" : "#f0fdf4",
+              color: isError ? "#dc2626" : "#16a34a",
+              border: `1px solid ${isError ? "#fecaca" : "#bbf7d0"}`
+            }}>
+              {isError ? <AlertCircle size={16} style={{ flexShrink: 0 }} /> : <CheckCircle2 size={16} style={{ flexShrink: 0 }} />}
+              <span style={{ wordBreak: "break-word" }}>{logMessage}</span>
+            </div>
+          )}
+
+          <div style={{ width: "100%", marginBottom: "20px", position: "relative" }}>
             <input 
               type="text" 
-              placeholder="Enter OTP" 
+              placeholder="Enter OTP code" 
               value={inputOtp}
               onChange={(e) => setInputOtp(e.target.value)}
-              style={{ padding: "8px", width: "200px" }}
+              style={{
+                width: "100%",
+                padding: "12px 14px",
+                borderRadius: "10px",
+                border: "1px solid #cbd5e1",
+                outline: "none",
+                fontSize: "14px",
+                boxSizing: "border-box",
+                transition: "border-color 0.2s, box-shadow 0.2s",
+                backgroundColor: "#f8fafc"
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = "#2563eb";
+                e.target.style.boxShadow = "0 0 0 3px rgba(37, 99, 235, 0.15)";
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = "#cbd5e1";
+                e.target.style.boxShadow = "none";
+              }}
               required 
             />
           </div>
-          <button type="submit" style={{ padding: "8px 16px", cursor: "pointer" }}>Login</button>
+
+          <button 
+            type="submit" 
+            style={{
+              width: "100%",
+              padding: "12px",
+              borderRadius: "10px",
+              border: "none",
+              background: "#0f172a",
+              color: "white",
+              fontSize: "14px",
+              fontWeight: "600",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+              transition: "background 0.2s, transform 0.1s"
+            }}
+            onMouseDown={(e) => e.currentTarget.style.transform = "scale(0.98)"}
+            onMouseUp={(e) => e.currentTarget.style.transform = "scale(1)"}
+          >
+            <LogIn size={16} />
+            Sign In
+          </button>
         </form>
       </div>
     );
