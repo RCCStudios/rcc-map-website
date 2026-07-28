@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react"
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
-import L from "leaflet"
+import { MapContainer, Marker, ZoomControl } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
-import VectorTileLayer from "./VectorTileLayer"
+
+import VectorTileLayer from "./components/VectorTileLayer"
+import Sidebar from "./components/Sidebar"
+import UserPopup from "./components/UserPopup"
+import MapFlyController from "./components/MapFlyController"
+
+import { useDarkMode } from "./hooks/useDarkMode"
+import { createUserIcon } from "./utils/userIcons"
 
 const CENTER_POSITION = [
   Number(import.meta.env.VITE_CENTER_LAT) || 0.0,
@@ -12,55 +18,6 @@ const CENTER_POSITION = [
 const MAPTILER_KEY = import.meta.env.VITE_MAPTILER_KEY;
 const DARK_MAP_ID = import.meta.env.VITE_DARK_MAP_ID;
 const LIGHT_MAP_ID = import.meta.env.VITE_LIGHT_MAP_ID;
-
-function formatUnixTimestamp(unixTimestamp) {
-  if (!unixTimestamp) return "N/A";
-  var currentDate = new Date(Date.now())
-  var currentDay = String(currentDate.getDate()).padStart(2, "0");
-  var currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0");
-  var currentYear = currentDate.getFullYear();
-  var date = new Date(unixTimestamp * 1000); // fix to ms
-  var day = String(date.getDate()).padStart(2, "0");
-  var month = String(date.getMonth() + 1).padStart(2, "0");
-  var year = date.getFullYear();
-
-  var hours = String(date.getHours()).padStart(2, "0");
-  var minutes = String(date.getMinutes()).padStart(2, "0");
-
-  return `${day}/${month}/${year}` === `${currentDay}/${currentMonth}/${currentYear}`
-    ? `${hours}:${minutes}`
-    : `${day}/${month}/${year} ${hours}:${minutes}`;
-}
-
-function formatNetworkStatus(networkStatus) {
-  switch (networkStatus) {
-    case 1:
-      return "Wi-Fi";
-    case 2:
-      return "Ethernet";
-    case 3:
-      return "Cellular";
-    case 0:
-    default:
-      return "Unknown";
-  }
-}
-
-function useDarkMode() {
-  const [isDark, setIsDark] = useState(() => 
-    window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
-  );
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
-    const handleChange = (e) => setIsDark(e.matches)
-
-    mediaQuery.addEventListener("change", handleChange)
-    return () => mediaQuery.removeEventListener("change", handleChange)
-  }, []);
-
-  return isDark;
-}
 
 function App() {
   const isDarkMode = useDarkMode();
@@ -73,9 +30,13 @@ function App() {
     return params.get("otp") || null;
   });
   const [inputOtp, setInputOtp] = useState("");
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("token") || null;
+  });
   const [users, setUsers] = useState([]);
   const [logMessage, setLogMessage] = useState("");
+  const [selectedCoords, setSelectedCoords] = useState(null);
 
   useEffect(() => {
     if (!otp) return;
@@ -92,7 +53,7 @@ function App() {
         setLogMessage("Successfully got token from server");
         setToken(data.token);
       } catch (e) {
-        setLogMessage(`Get OTP Error: ${e}`);
+        setLogMessage(`Get Token Error: ${e}`);
       }
     }
     getToken();
@@ -193,7 +154,7 @@ function App() {
     setOtp(inputOtp);
   };
 
-  if (!otp || !token) {
+  if (!token) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", background: "#f0f2f5" }}>
         <form onSubmit={handleLogin} style={{ padding: "20px", background: "white", borderRadius: "8px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
@@ -215,86 +176,18 @@ function App() {
     );
   };
 
-  const getStatusBadgeColor = (user) => {
-    const currentTimestamp = Math.floor(Date.now() / 1000); // fix to ms
-    const timeTo = 300;
-
-    const timestamps = [
-      user.batteryLevel?.timestamp,
-      user.latitude?.timestamp,
-      user.longitude?.timestamp,
-      user.network?.timestamp,
-      user.screenLock?.timestamp
-    ].filter(Boolean);
-
-    if (timestamps.length === 0) return "#e11025";
-
-    const isFresh = (ts) => (currentTimestamp - ts) < timeTo;
-
-    const allFresh = timestamps.every(isFresh);
-    const someFresh = timestamps.some(isFresh);
-
-    if (allFresh) return "#1bb23e";
-    if (someFresh) return "#ffc107";
-    return "#e11025";
-  }
-
-  const createUserIcon = (user) => {
-    const avatarPath = user.pfpPath || null;
-    const batteryLevel = user.batteryLevel?.value || 0;
-    const networkStatus = user.network?.value || 0;
-    const screenLockStatus = user.screenLock?.value || true;
-
-    const badgeColor = getStatusBadgeColor(user);
-
-    const html = `
-      <div style="position: relative; width: 40px; height: 40px;">
-        <div style="
-          background-color: white;
-          border: 2px solid black;
-          border-radius: 50%;
-          width: 40px;
-          height: 40px;
-          overflow: hidden;
-          box-shadow: 0 3px 6px rgba(0,0,0,0.3);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-weight: bold;
-        ">
-          ${avatarPath ?
-              `<img src="${avatarPath}" style="width: 100%; height: 100%; object-fit: cover;" />` :
-              ( user.name ? user.name.charAt(0).toUpperCase() : "?" )
-          }
-        </div>
-        <div style="
-          position: absolute;
-          bottom: -5px;
-          right: -5px;
-          border: 1px solid black;
-          border-radius: 50%;
-          width: 10px;
-          height: 10px;
-          background-color: ${badgeColor};
-        "></div>
-      </div>
-    `;
-    return L.divIcon({
-      html: html,
-      className: "custom-div-icon",
-      iconSize: [44, 44],
-      iconAnchor: [22, 22],
-      popupAnchor: [0, -22]
-    });
-  }
-
   return (
     <div style={{ height: "100vh", width: "100vw"}}>
+      <Sidebar users={users} onSelectUser={(coords) => setSelectedCoords(coords)} />
+
       <MapContainer
         center={CENTER_POSITION}
-        zoom={13}
+        zoom={14}
+        zoomControl={false}
         style={{ height: "100%", width: "100%" }}
       >
+        <ZoomControl position="topright" />
+        <MapFlyController selectedCoords={selectedCoords} />
         <VectorTileLayer key={isDarkMode ? "dark" : "light"} styleUrl={styleUrl} />
         {users
           .filter(user => user.latitude?.value && user.longitude?.value)
@@ -307,63 +200,7 @@ function App() {
                 position={[user.latitude?.value, user.longitude?.value]}
                 icon={customIcon}
               >
-                <Popup className="custom-popup">
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px", paddingTop: "12px" }}>
-                    <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "bold", color: "#111" }}>
-                      {user.name}
-                    </h3>
-                  </div>
-                  <div style={{ paddingBottom: "8px", display: "flex", flex: "row", justifyContent: "space-between", alignItems: "center", gap: "6px" }}>
-                    <span style={{
-                      fontSize: "10px",
-                      padding: "2px 6px",
-                      borderRadius: "10px",
-                      fontWeight: "bold",
-                      backgroundColor: user.screenLock?.value ? "#f1f3f5" : "#e6fcf5",
-                      color: user.screenLock?.value ? "#495057" : "#0ca678",
-                      border: `1px solid ${user.screenLock?.value ? "#ced4da" : "#96f2d7"}`
-                    }}>
-                      {user.screenLock?.value ? "🔒 Locked" : "🔓 Unlocked"}
-                    </span>
-                    <div style={{ fontSize: "10px", color: "#888" }}>
-                      {formatUnixTimestamp(user.screenLock?.timestamp)}
-                    </div>
-                  </div>
-
-                  <hr style={{ border: "none", borderTop: "1px solid #eee", margin: "8px 0" }} />
-
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
-                    <span style={{ fontSize: "13px", color: "#555", display: "flex", alignItems: "center", gap: "6px", paddingRight: "8px" }}>
-                      🔋 Battery
-                    </span>
-                    <div style={{ textAlign: "right" }}>
-                      <span style={{ 
-                        fontSize: "13px", 
-                        fontWeight: "bold", 
-                        color: user.batteryLevel?.value < 20 ? "#c4192a" : ( user.batteryLevel?.value > 80 ? "#20a13e" : "#ddaa12" ) 
-                      }}>
-                        {user.batteryLevel?.value ?? "N/A"}%
-                      </span>
-                      <div style={{ fontSize: "10px", color: "#888" }}>
-                        {formatUnixTimestamp(user.batteryLevel?.timestamp)}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <span style={{ fontSize: "13px", color: "#555", display: "flex", alignItems: "center", gap: "6px", paddingRight: "8px" }}>
-                      🌐 Network
-                    </span>
-                    <div style={{ textAlign: "right" }}>
-                      <span style={{ fontSize: "13px", fontWeight: "bold", color: "#333" }}>
-                        {formatNetworkStatus(user.network?.value) ?? "Unknown"}
-                      </span>
-                      <div style={{ fontSize: "10px", color: "#888" }}>
-                        {formatUnixTimestamp(user.network?.timestamp)}
-                      </div>
-                    </div>
-                  </div>
-                </Popup>
+                <UserPopup user={user} />
               </Marker>
             );
           })
