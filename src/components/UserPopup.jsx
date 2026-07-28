@@ -28,7 +28,7 @@ export default function UserPopup({ user }) {
                 }}>
                     {user.screenLock?.value
                         ? <><Lock size={12} />{t('status.screen_lock.locked')}</>
-                        : <><Lock size={12} />{t('status.screen_lock.unlocked')}</>
+                        : <><Unlock size={12} color="#10b981" />{t('status.screen_lock.unlocked')}</>
                     }
                 </span>
                 <div style={{ fontSize: "10px", color: "#888" }}>
