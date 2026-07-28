@@ -5,6 +5,10 @@ import { useTranslation } from "react-i18next";
 
 export default function Sidebar({ users, onSelectUser }) {
     const { t, i18n } = useTranslation();
+    const toggleLanguage = () => {
+        const currentLang = i18n.language?.split('-')[0] || 'ru';
+        i18n.changeLanguage(currentLang === 'ru' ? 'en' : 'ru');
+    };
 
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -20,7 +24,7 @@ export default function Sidebar({ users, onSelectUser }) {
                 style={{
                     position: "absolute",
                     top: "16px",
-                    left: isOpen ? "316px" : "16px",
+                    left: isOpen ? "416px" : "16px",
                     zIndex: 1000,
                     background: "white",
                     border: "1px solid #e0e0e0",
@@ -43,7 +47,7 @@ export default function Sidebar({ users, onSelectUser }) {
                 position: "absolute",
                 top: 0,
                 left: 0,
-                width: "300px",
+                width: "400px",
                 height: "100%",
                 backgroundColor: "white",
                 zIndex: 999,
@@ -55,7 +59,44 @@ export default function Sidebar({ users, onSelectUser }) {
                 padding: "16px",
                 boxSizing: "border-box"
             }}>
-                <h2 style={{ margin: "0 0 16px 0", fontSize: "20px" }}>{t('sidebar.title')}: ({users.length})</h2>
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "16px"
+                }}>
+                    <h2 style={{ margin: 0, fontSize: "20px", whiteSpace: "nowrap" }}>{t('sidebar.title')}: ({users.length})</h2>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <button 
+                            type="button" 
+                            onClick={toggleLanguage}
+                            style={{ 
+                                padding: '4px 8px',
+                                borderRadius: '6px',
+                                border: '1px solid #cbd5e1', // Серая аккуратная обводка
+                                background: '#ffffff',
+                                cursor: 'pointer', 
+                                fontWeight: '600', 
+                                fontSize: '12px',
+                                color: '#475569',
+                                transition: 'all 0.2s ease',
+                                outline: 'none'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.borderColor = '#94a3b8';
+                                e.currentTarget.style.background = '#f8fafc';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.borderColor = '#cbd5e1';
+                                e.currentTarget.style.background = '#ffffff';
+                            }}
+                        >
+                            {(i18n.language?.split('-')[0] || 'ru').toUpperCase()}
+                        </button>
+                    </div>
+                </div>
 
                 <div style={{ position: "relative", marginBottom: "16px" }}>
                     <Search size={16} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#999" }} />

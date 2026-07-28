@@ -40,7 +40,26 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
                     <button 
                         type="button" 
                         onClick={toggleLanguage}
-                        style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' }}
+                        style={{ 
+                            padding: '4px 8px',
+                            borderRadius: '6px',
+                            border: '1px solid #cbd5e1', // Серая аккуратная обводка
+                            background: '#ffffff',
+                            cursor: 'pointer', 
+                            fontWeight: '600', 
+                            fontSize: '12px',
+                            color: '#475569',
+                            transition: 'all 0.2s ease',
+                            outline: 'none'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = '#94a3b8';
+                            e.currentTarget.style.background = '#f8fafc';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = '#cbd5e1';
+                            e.currentTarget.style.background = '#ffffff';
+                        }}
                     >
                         {(i18n.language?.split('-')[0] || 'ru').toUpperCase()}
                     </button>
@@ -64,7 +83,7 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
                     />
                 </div>
 
-                <h2 style={{ margin: "0 0 6px 0", fontSize: "20px", fontWeight: "700", color: "#0f172a" }}>
+                <h2 style={{ margin: "0 0 6px 0", fontSize: "20px", fontWeight: "700", color: "#0f172a", textAlign: "center" }}>
                     {t('login.title')}
                 </h2>
                 <p style={{ margin: "0 0 24px 0", fontSize: "13px", color: "#64748b", textAlign: "center" }}>
