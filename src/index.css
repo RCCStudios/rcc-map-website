@@ -11,6 +11,8 @@
   --color-text-muted: light-dark(#7c7c7c, #8c8c8c);
   --color-brand-main: #008766;
   --color-brand-muted: rgb(from var(--color-brand-main) r g b / 0.15);
+  --color-border: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.12));
+  --color-border-strong: light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.22));
 }
 
 body {

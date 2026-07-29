@@ -41,27 +41,26 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
                         type="button" 
                         onClick={toggleLanguage}
                         style={{ 
-                            padding: '4px 8px',
-                            borderRadius: '6px',
-                            border: '1px solid var(--color-text-muted)',
-                            background: 'var(--color-bg-canvas)',
-                            cursor: 'pointer', 
-                            fontWeight: '600', 
-                            fontSize: '12px',
-                            color: 'var(--color-text-muted)',
-                            transition: 'all 0.2s ease',
-                            outline: 'none'
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.borderColor = 'var(--color-brand-main)';
-                            e.currentTarget.style.background = 'var(--color-bg-surface)';
-                            e.currentTarget.style.boxShadow = "0 0 0 3px var(--color-brand-muted)";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.borderColor = 'var(--color-text-muted)';
-                            e.currentTarget.style.background = 'var(--color-bg-canvas)';
-                            e.currentTarget.style.boxShadow = "none";
-                        }}
+                                padding: '4px 8px',
+                                borderRadius: '6px',
+                                border: '1px solid var(--color-border-strong)',
+                                backgroundColor: 'var(--color-bg-surface)',
+                                cursor: 'pointer', 
+                                fontWeight: '600', 
+                                fontSize: '12px',
+                                color: 'var(--color-text-muted)',
+                                transition: 'all 0.2s ease',
+                                outline: 'none'
+                            }}
+
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.borderColor = 'var(--color-brand-main)';
+                                e.currentTarget.style.color = 'var(--color-text-main)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.borderColor = 'var(--color-border-strong)';
+                                e.currentTarget.style.color = 'var(--color-text-muted)';
+                            }}
                     >
                         {(i18n.language?.split('-')[0] || 'ru').toUpperCase()}
                     </button>
@@ -120,21 +119,24 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
                         onChange={(e) => setInputOtp(e.target.value)}
                         style={{
                             width: "100%",
-                            padding: "12px 14px",
+                            padding: "10px 12px",
                             borderRadius: "10px",
-                            border: "1px solid var(--color-text-muted)",
+                            border: "1px solid var(--color-border-strong)",
+                            backgroundColor: "var(--color-bg-surface)",
                             outline: "none",
                             fontSize: "14px",
+                            color: "var(--color-text-main)",
                             boxSizing: "border-box",
-                            transition: "border-color 0.2s, box-shadow 0.2s",
-                            backgroundColor: "var(--color-bg-surface)"
+                            transition: "all 0.2s ease"
                         }}
                         onFocus={(e) => {
                             e.target.style.borderColor = "var(--color-brand-main)";
-                            e.target.style.boxShadow = "0 0 0 3px var(--color-brand-muted)";
+                            e.target.style.backgroundColor = "var(--color-bg-canvas)";
+                            e.target.style.boxShadow = "0 1px 3px var(--color-brand-muted)";
                         }}
                         onBlur={(e) => {
-                            e.target.style.borderColor = "var(--color-text-muted)";
+                            e.target.style.borderColor = "var(--color-border-strong)";
+                            e.target.style.backgroundColor = "var(--color-bg-surface)";
                             e.target.style.boxShadow = "none";
                         }}
                         required 
@@ -160,7 +162,7 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
                         transition: "background 0.2s, transform 0.1s"
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.boxShadow = "0 0 0 3px var(--color-brand-muted)";
+                      e.currentTarget.style.boxShadow = "0 1px 3px var(--color-brand-muted)";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.boxShadow = "none";

@@ -23,6 +23,7 @@ export function createUserIcon(user) {
           justify-content: center;
           align-items: center;
           font-weight: bold;
+          font-size: 20px;
         ">
           ${avatarPath ?
               `<img src="${avatarPath}" style="width: 100%; height: 100%; object-fit: cover;" />` :

@@ -75,8 +75,8 @@ export default function Sidebar({ users, onSelectUser }) {
                             style={{ 
                                 padding: '4px 8px',
                                 borderRadius: '6px',
-                                border: '1px solid var(--color-text-muted)',
-                                backgroundColor: 'var(--color-bg-canvas)',
+                                border: '1px solid var(--color-border-strong)',
+                                backgroundColor: 'var(--color-bg-surface)',
                                 cursor: 'pointer', 
                                 fontWeight: '600', 
                                 fontSize: '12px',
@@ -86,14 +86,12 @@ export default function Sidebar({ users, onSelectUser }) {
                             }}
 
                             onMouseEnter={(e) => {
-                              e.currentTarget.style.borderColor = 'var(--color-brand-main)';
-                              e.currentTarget.style.background = 'var(--color-bg-surface)';
-                              e.currentTarget.style.boxShadow = "0 0 0 3px var(--color-brand-muted)";
+                                e.currentTarget.style.borderColor = 'var(--color-brand-main)';
+                                e.currentTarget.style.color = 'var(--color-text-main)';
                             }}
                             onMouseLeave={(e) => {
-                              e.currentTarget.style.borderColor = 'var(--color-text-muted)';
-                              e.currentTarget.style.background = 'var(--color-bg-canvas)';
-                              e.currentTarget.style.boxShadow = "none";
+                                e.currentTarget.style.borderColor = 'var(--color-border-strong)';
+                                e.currentTarget.style.color = 'var(--color-text-muted)';
                             }}
                         >
                             {(i18n.language?.split('-')[0] || 'ru').toUpperCase()}
@@ -110,26 +108,30 @@ export default function Sidebar({ users, onSelectUser }) {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         style={{
                             width: "100%",
-                            padding: "8px 12px 8px 34px",
-                            borderRadius: "8px",
-                            border: "1px solid var(--color-text-muted)",
+                            padding: "10px 12px 10px 36px",
+                            borderRadius: "10px",
+                            border: "1px solid var(--color-border-strong)",
                             backgroundColor: "var(--color-bg-surface)",
                             outline: "none",
                             fontSize: "14px",
-                            boxSizing: "border-box"
+                            color: "var(--color-text-main)",
+                            boxSizing: "border-box",
+                            transition: "all 0.2s ease"
                         }}
                         onFocus={(e) => {
-                          e.target.style.borderColor = "var(--color-brand-main)";
-                          e.target.style.boxShadow = "0 0 0 3px var(--color-brand-muted)";
+                            e.target.style.borderColor = "var(--color-brand-main)";
+                            e.target.style.backgroundColor = "var(--color-bg-canvas)";
+                            e.target.style.boxShadow = "0 1px 3px var(--color-brand-muted)";
                         }}
                         onBlur={(e) => {
-                          e.target.style.borderColor = "var(--color-text-muted)";
-                          e.target.style.boxShadow = "none";
+                            e.target.style.borderColor = "var(--color-border-strong)";
+                            e.target.style.backgroundColor = "var(--color-bg-surface)";
+                            e.target.style.boxShadow = "none";
                         }}
                     />
                 </div>
 
-                <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: "8px", paddingTop: "8px" }}>
                     {filteredUsers.map(user => {
                         const badgeColor = getStatusBadgeColor(user);
                         const hasCoords = user.latitude?.value && user.longitude?.value;
@@ -142,23 +144,28 @@ export default function Sidebar({ users, onSelectUser }) {
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "space-between",
-                                    padding: "10px",
-                                    borderRadius: "8px",
-                                    border: "1px solid var(--color-text-muted)",
+                                    padding: "12px",
+                                    borderRadius: "12px",
+                                    border: "1px solid var(--color-border)",
                                     cursor: hasCoords ? "pointer" : "not-allowed",
                                     opacity: hasCoords ? 1 : 0.5,
-                                    backgroundColor: "var(--color-bg-canvas)",
-                                    transition: "background 0.2s"
+                                    backgroundColor: "var(--color-bg-surface)",
+                                    transition: "all 0.2s ease",
+                                    boxShadow: "0 1px 3px rgba(0,0,0,0.03)"
                                 }}
                                 onMouseEnter={(e) => {
-                                  e.currentTarget.style.borderColor = 'var(--color-brand-main)';
-                                  e.currentTarget.style.background = 'var(--color-bg-surface)';
-                                  e.currentTarget.style.boxShadow = "0 0 0 3px var(--color-brand-muted)";
+                                    if (!hasCoords) return;
+                                    e.currentTarget.style.borderColor = 'var(--color-brand-main)';
+                                    e.currentTarget.style.backgroundColor = 'var(--color-bg-canvas)';
+                                    e.currentTarget.style.boxShadow = "0 4px 12px var(--color-brand-muted)";
+                                    e.currentTarget.style.transform = "translateY(-1px)";
                                 }}
                                 onMouseLeave={(e) => {
-                                  e.currentTarget.style.borderColor = 'var(--color-text-muted)';
-                                  e.currentTarget.style.background = 'var(--color-bg-canvas)';
-                                  e.currentTarget.style.boxShadow = "none";
+                                    if (!hasCoords) return;
+                                    e.currentTarget.style.borderColor = 'var(--color-border)';
+                                    e.currentTarget.style.backgroundColor = 'var(--color-bg-surface)';
+                                    e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.03)";
+                                    e.currentTarget.style.transform = "none";
                                 }}
                             >
                                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
