@@ -49,7 +49,7 @@ export default function Sidebar({ users, onSelectUser }) {
                 left: 0,
                 width: "400px",
                 height: "100%",
-                backgroundColor: "var(--color-bg-surface)",
+                backgroundColor: "var(--color-bg-canvas)",
                 zIndex: 999,
                 boxShadow: "2px 0 12px rgba(0,0,0,0.08)",
                 transform: isOpen ? "translateX(0)" : "translateX(-100%)",
@@ -66,7 +66,7 @@ export default function Sidebar({ users, onSelectUser }) {
                     alignItems: "center",
                     marginBottom: "16px"
                 }}>
-                    <h2 style={{ margin: 0, fontSize: "20px", whiteSpace: "nowrap" }}>{t('sidebar.title')}: ({users.length})</h2>
+                    <h2 style={{ margin: 0, fontSize: "20px", whiteSpace: "nowrap", color: "var(--color-text-main)" }}>{t('sidebar.title')}: ({users.length})</h2>
 
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                         <button 
@@ -76,7 +76,7 @@ export default function Sidebar({ users, onSelectUser }) {
                                 padding: '4px 8px',
                                 borderRadius: '6px',
                                 border: '1px solid var(--color-text-muted)',
-                                background: 'var(--color-bg-canvas)',
+                                backgroundColor: 'var(--color-bg-canvas)',
                                 cursor: 'pointer', 
                                 fontWeight: '600', 
                                 fontSize: '12px',
@@ -113,9 +113,18 @@ export default function Sidebar({ users, onSelectUser }) {
                             padding: "8px 12px 8px 34px",
                             borderRadius: "8px",
                             border: "1px solid var(--color-text-muted)",
+                            backgroundColor: "var(--color-bg-surface)",
                             outline: "none",
                             fontSize: "14px",
                             boxSizing: "border-box"
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = "var(--color-brand-main)";
+                          e.target.style.boxShadow = "0 0 0 3px var(--color-brand-muted)";
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = "var(--color-text-muted)";
+                          e.target.style.boxShadow = "none";
                         }}
                     />
                 </div>
@@ -138,8 +147,18 @@ export default function Sidebar({ users, onSelectUser }) {
                                     border: "1px solid var(--color-text-muted)",
                                     cursor: hasCoords ? "pointer" : "not-allowed",
                                     opacity: hasCoords ? 1 : 0.5,
-                                    backgroundColor: "var(--color-bg-surface)",
+                                    backgroundColor: "var(--color-bg-canvas)",
                                     transition: "background 0.2s"
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.borderColor = 'var(--color-brand-main)';
+                                  e.currentTarget.style.background = 'var(--color-bg-surface)';
+                                  e.currentTarget.style.boxShadow = "0 0 0 3px var(--color-brand-muted)";
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.borderColor = 'var(--color-text-muted)';
+                                  e.currentTarget.style.background = 'var(--color-bg-canvas)';
+                                  e.currentTarget.style.boxShadow = "none";
                                 }}
                             >
                                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
