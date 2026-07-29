@@ -9,7 +9,7 @@ export default function UserPopup({ user }) {
     return ( 
         <Popup className="custom-popup">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px", paddingTop: "12px" }}>
-                <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "bold", color: "#111" }}>
+                <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "bold", color: "var(--color-text-main)" }}>
                     {user.name}
                 </h3>
             </div>
@@ -31,15 +31,15 @@ export default function UserPopup({ user }) {
                         : <><Unlock size={12} color="#10b981" />{t('status.screen_lock.unlocked')}</>
                     }
                 </span>
-                <div style={{ fontSize: "10px", color: "#888" }}>
+                <div style={{ fontSize: "10px", color: "var(--color-text-muted)" }}>
                     {formatUnixTimestamp(user.screenLock?.timestamp)}
                 </div>
             </div>
 
-            <hr style={{ border: "none", borderTop: "1px solid #eee", margin: "8px 0" }} />
+            <hr style={{ border: "none", borderTop: "1px solid var(--color-text-muted)", margin: "8px 0" }} />
 
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
-                <span style={{ fontSize: "13px", color: "#555", display: "flex", alignItems: "center", gap: "4px", paddingRight: "8px" }}>
+                <span style={{ fontSize: "13px", color: "var(--color-text-muted)", display: "flex", alignItems: "center", gap: "4px", paddingRight: "8px" }}>
                     <Battery size={16} />
                     {t('status.battery')}
                 </span>
@@ -51,22 +51,22 @@ export default function UserPopup({ user }) {
                     }}>
                         {user.batteryLevel?.value ?? "N/A"}%
                     </span>
-                    <div style={{ fontSize: "10px", color: "#888" }}>
+                    <div style={{ fontSize: "10px", color: "var(--color-text-muted)" }}>
                         {formatUnixTimestamp(user.batteryLevel?.timestamp)}
                     </div>
                 </div>
             </div>
 
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <span style={{ fontSize: "13px", color: "#555", display: "flex", alignItems: "center", gap: "4px", paddingRight: "8px" }}>
+                <span style={{ fontSize: "13px", color: "var(--color-text-muted)", display: "flex", alignItems: "center", gap: "4px", paddingRight: "8px" }}>
                     <Network size={16} />
                     {t('status.network.title')}
                 </span>
                 <div style={{ textAlign: "right" }}>
-                    <span style={{ fontSize: "13px", fontWeight: "bold", color: "#333" }}>
+                    <span style={{ fontSize: "13px", fontWeight: "bold", color: "var(--color-text-muted)" }}>
                     {formatNetworkStatus(user.network?.value, t) ?? t('status.network.unknown')}
                     </span>
-                    <div style={{ fontSize: "10px", color: "#888" }}>
+                    <div style={{ fontSize: "10px", color: "var(--color-text-muted)" }}>
                     {formatUnixTimestamp(user.network?.timestamp)}
                     </div>
                 </div>

@@ -15,8 +15,8 @@
             "title": "Сеть",
             "unknown": "Неизвестно",
             "wi-fi": "Wi-Fi",
-            "ethernet": "Проводной",
-            "cellular": "Мобильный"
+            "ethernet": "Проводная",
+            "cellular": "Мобильная"
         },
         "screen_lock": {
             "locked": "Заблокирован",

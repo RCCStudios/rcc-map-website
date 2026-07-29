@@ -12,8 +12,8 @@ export function createUserIcon(user) {
     const html = `
       <div style="position: relative; width: 40px; height: 40px;">
         <div style="
-          background-color: white;
-          border: 2px solid black;
+          background-color: var(--color-bg-canvas);
+          border: 2px solid var(--color-text-main);
           border-radius: 50%;
           width: 40px;
           height: 40px;
@@ -33,7 +33,7 @@ export function createUserIcon(user) {
           position: absolute;
           bottom: -5px;
           right: -5px;
-          border: 1px solid black;
+          border: 1px solid var(--color-text-main);
           border-radius: 50%;
           width: 10px;
           height: 10px;

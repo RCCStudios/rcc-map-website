@@ -17,13 +17,13 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
             alignItems: "center",
             height: "100vh",
             width: "100vw",
-            background: "radial-gradient(circle at center, #1e293b 0%, #0f172a 100%)",
+            background: "radial-gradient(circle at center, var(--color-brand-main) 0%, var(--color-bg-surface) 100%)",
             fontFamily: "system-ui, -apple-system, sans-serif"
         }}>
             <form 
                 onSubmit={handleLogin} 
                 style={{
-                    background: "rgba(255, 255, 255, 0.98)",
+                    background: "var(--color-bg-canvas)",
                     backdropFilter: "blur(10px)",
                     padding: "32px 28px",
                     borderRadius: "16px",
@@ -43,22 +43,24 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
                         style={{ 
                             padding: '4px 8px',
                             borderRadius: '6px',
-                            border: '1px solid #cbd5e1', // Серая аккуратная обводка
-                            background: '#ffffff',
+                            border: '1px solid var(--color-text-muted)',
+                            background: 'var(--color-bg-canvas)',
                             cursor: 'pointer', 
                             fontWeight: '600', 
                             fontSize: '12px',
-                            color: '#475569',
+                            color: 'var(--color-text-muted)',
                             transition: 'all 0.2s ease',
                             outline: 'none'
                         }}
                         onMouseEnter={(e) => {
-                            e.currentTarget.style.borderColor = '#94a3b8';
-                            e.currentTarget.style.background = '#f8fafc';
+                            e.currentTarget.style.borderColor = 'var(--color-brand-main)';
+                            e.currentTarget.style.background = 'var(--color-bg-surface)';
+                            e.currentTarget.style.boxShadow = "0 0 0 3px var(--color-brand-muted)";
                         }}
                         onMouseLeave={(e) => {
-                            e.currentTarget.style.borderColor = '#cbd5e1';
-                            e.currentTarget.style.background = '#ffffff';
+                            e.currentTarget.style.borderColor = 'var(--color-text-muted)';
+                            e.currentTarget.style.background = 'var(--color-bg-canvas)';
+                            e.currentTarget.style.boxShadow = "none";
                         }}
                     >
                         {(i18n.language?.split('-')[0] || 'ru').toUpperCase()}
@@ -69,12 +71,12 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
                     width: "64px",
                     height: "64px",
                     borderRadius: "12px",
-                    background: "#f1f5f9",
+                    background: "var(--color-bg-surface)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     marginBottom: "16px",
-                    color: "#0f172a"
+                    color: "var(--color-text-main)"
                 }}>
                     <img 
                         src="/rcc_map.svg" 
@@ -83,10 +85,10 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
                     />
                 </div>
 
-                <h2 style={{ margin: "0 0 6px 0", fontSize: "20px", fontWeight: "700", color: "#0f172a", textAlign: "center" }}>
+                <h2 style={{ margin: "0 0 6px 0", fontSize: "20px", fontWeight: "700", color: "var(--color-text-main)", textAlign: "center" }}>
                     {t('login.title')}
                 </h2>
-                <p style={{ margin: "0 0 24px 0", fontSize: "13px", color: "#64748b", textAlign: "center" }}>
+                <p style={{ margin: "0 0 24px 0", fontSize: "13px", color: "var(--color-text-muted)", textAlign: "center" }}>
                     {t('login.subtitle')}
                 </p>
 
@@ -120,19 +122,19 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
                             width: "100%",
                             padding: "12px 14px",
                             borderRadius: "10px",
-                            border: "1px solid #cbd5e1",
+                            border: "1px solid var(--color-text-muted)",
                             outline: "none",
                             fontSize: "14px",
                             boxSizing: "border-box",
                             transition: "border-color 0.2s, box-shadow 0.2s",
-                            backgroundColor: "#f8fafc"
+                            backgroundColor: "var(--color-bg-surface)"
                         }}
                         onFocus={(e) => {
-                            e.target.style.borderColor = "#2563eb";
-                            e.target.style.boxShadow = "0 0 0 3px rgba(37, 99, 235, 0.15)";
+                            e.target.style.borderColor = "var(--color-brand-main)";
+                            e.target.style.boxShadow = "0 0 0 3px var(--color-brand-muted)";
                         }}
                         onBlur={(e) => {
-                            e.target.style.borderColor = "#cbd5e1";
+                            e.target.style.borderColor = "var(--color-text-muted)";
                             e.target.style.boxShadow = "none";
                         }}
                         required 
@@ -146,8 +148,8 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
                         padding: "12px",
                         borderRadius: "10px",
                         border: "none",
-                        background: "#0f172a",
-                        color: "white",
+                        background: "var(--color-text-main)",
+                        color: "var(--color-bg-surface)",
                         fontSize: "14px",
                         fontWeight: "600",
                         cursor: "pointer",
@@ -157,6 +159,13 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
                         gap: "8px",
                         transition: "background 0.2s, transform 0.1s"
                     }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.boxShadow = "0 0 0 3px var(--color-brand-muted)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
+
                     onMouseDown={(e) => e.currentTarget.style.transform = "scale(0.98)"}
                     onMouseUp={(e) => e.currentTarget.style.transform = "scale(1)"}
                 >

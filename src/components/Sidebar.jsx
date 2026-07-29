@@ -26,8 +26,8 @@ export default function Sidebar({ users, onSelectUser }) {
                     top: "16px",
                     left: isOpen ? "416px" : "16px",
                     zIndex: 1000,
-                    background: "white",
-                    border: "1px solid #e0e0e0",
+                    background: "var(--color-bg-surface)",
+                    border: "1px solid var(--color-bg-canvas)",
                     borderRadius: "8px",
                     width: "40px",
                     height: "40px",
@@ -37,7 +37,7 @@ export default function Sidebar({ users, onSelectUser }) {
                     cursor: "pointer",
                     boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
                     transition: "left 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                    color: "#333"
+                    color: "var(--color-text-main)"
                 }}
             >
                 {isOpen ? <ChevronLeft size={20} /> : <Menu size={20} />}
@@ -49,7 +49,7 @@ export default function Sidebar({ users, onSelectUser }) {
                 left: 0,
                 width: "400px",
                 height: "100%",
-                backgroundColor: "white",
+                backgroundColor: "var(--color-bg-surface)",
                 zIndex: 999,
                 boxShadow: "2px 0 12px rgba(0,0,0,0.08)",
                 transform: isOpen ? "translateX(0)" : "translateX(-100%)",
@@ -75,22 +75,25 @@ export default function Sidebar({ users, onSelectUser }) {
                             style={{ 
                                 padding: '4px 8px',
                                 borderRadius: '6px',
-                                border: '1px solid #cbd5e1', // Серая аккуратная обводка
-                                background: '#ffffff',
+                                border: '1px solid var(--color-text-muted)',
+                                background: 'var(--color-bg-canvas)',
                                 cursor: 'pointer', 
                                 fontWeight: '600', 
                                 fontSize: '12px',
-                                color: '#475569',
+                                color: 'var(--color-text-muted)',
                                 transition: 'all 0.2s ease',
                                 outline: 'none'
                             }}
+
                             onMouseEnter={(e) => {
-                                e.currentTarget.style.borderColor = '#94a3b8';
-                                e.currentTarget.style.background = '#f8fafc';
+                              e.currentTarget.style.borderColor = 'var(--color-brand-main)';
+                              e.currentTarget.style.background = 'var(--color-bg-surface)';
+                              e.currentTarget.style.boxShadow = "0 0 0 3px var(--color-brand-muted)";
                             }}
                             onMouseLeave={(e) => {
-                                e.currentTarget.style.borderColor = '#cbd5e1';
-                                e.currentTarget.style.background = '#ffffff';
+                              e.currentTarget.style.borderColor = 'var(--color-text-muted)';
+                              e.currentTarget.style.background = 'var(--color-bg-canvas)';
+                              e.currentTarget.style.boxShadow = "none";
                             }}
                         >
                             {(i18n.language?.split('-')[0] || 'ru').toUpperCase()}
@@ -99,7 +102,7 @@ export default function Sidebar({ users, onSelectUser }) {
                 </div>
 
                 <div style={{ position: "relative", marginBottom: "16px" }}>
-                    <Search size={16} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "#999" }} />
+                    <Search size={16} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "var(--color-text-muted)" }} />
                     <input 
                         type="text" 
                         placeholder={t('sidebar.search')}
@@ -109,7 +112,7 @@ export default function Sidebar({ users, onSelectUser }) {
                             width: "100%",
                             padding: "8px 12px 8px 34px",
                             borderRadius: "8px",
-                            border: "1px solid #ddd",
+                            border: "1px solid var(--color-text-muted)",
                             outline: "none",
                             fontSize: "14px",
                             boxSizing: "border-box"
@@ -132,18 +135,18 @@ export default function Sidebar({ users, onSelectUser }) {
                                     justifyContent: "space-between",
                                     padding: "10px",
                                     borderRadius: "8px",
-                                    border: "1px solid #eee",
+                                    border: "1px solid var(--color-text-muted)",
                                     cursor: hasCoords ? "pointer" : "not-allowed",
                                     opacity: hasCoords ? 1 : 0.5,
-                                    backgroundColor: "#f9f9f9",
+                                    backgroundColor: "var(--color-bg-surface)",
                                     transition: "background 0.2s"
                                 }}
                             >
                                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                                     <div style={{ position: "relative", width: "32px", height: "32px" }}>
                                         <div style={{
-                                            backgroundColor: "white",
-                                            border: "2px solid black",
+                                            backgroundColor: "var(--color-bg-canvas)",
+                                            border: "2px solid var(--color-text-main)",
                                             borderRadius: "50%",
                                             width: "30px",
                                             height: "30px",
@@ -163,7 +166,7 @@ export default function Sidebar({ users, onSelectUser }) {
                                             position: "absolute",
                                             bottom: "-3px",
                                             right: "-3px",
-                                            border: "1px solid black",
+                                            border: "1px solid var(--color-text-main)",
                                             borderRadius: "50%",
                                             width: "8px",
                                             height: "8px",
@@ -172,7 +175,7 @@ export default function Sidebar({ users, onSelectUser }) {
                                     </div>
 
                                     <div>
-                                        <div style={{ fontWeight: "bold", fontSize: "14px", color: "#333" }}>
+                                        <div style={{ fontWeight: "bold", fontSize: "14px", color: "var(--color-text-main)" }}>
                                             {user.name}
                                         </div>
                                         <div style={{
@@ -196,7 +199,7 @@ export default function Sidebar({ users, onSelectUser }) {
                                     gap: "4px",
                                     fontSize: "13px",
                                     fontWeight: "600",
-                                    color: "#475569"
+                                    color: "var(--color-text-muted)"
                                 }}>
                                     <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                                         <Battery size={14} />
