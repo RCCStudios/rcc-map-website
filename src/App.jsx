@@ -10,6 +10,7 @@ import Login from "./components/Login"
 
 import { useDarkMode } from "./hooks/useDarkMode";
 import { createUserIcon } from "./utils/userIcons";
+import Attribution from "./components/Attribution";
 
 const CENTER_POSITION = [
   Number(import.meta.env.VITE_CENTER_LAT) || 0.0,
@@ -21,7 +22,7 @@ const DARK_MAP_ID = import.meta.env.VITE_DARK_MAP_ID;
 const LIGHT_MAP_ID = import.meta.env.VITE_LIGHT_MAP_ID;
 
 function App() {
-  const isDarkMode = useDarkMode();
+  const { isDarkMode, toggleTheme } = useDarkMode();
   const mapId = isDarkMode ? DARK_MAP_ID : LIGHT_MAP_ID;
   const styleUrl = `https://api.maptiler.com/maps/${mapId}/style.json?key=${MAPTILER_KEY}`;
 
@@ -162,21 +163,31 @@ function App() {
         inputOtp={inputOtp}
         setInputOtp={setInputOtp}
         logMessage={logMessage}
+        isDarkMode={isDarkMode}
+        toggleTheme={toggleTheme}
       />
     );
   };
 
   return (
     <div style={{ height: "100vh", width: "100vw"}}>
-      <Sidebar users={users} onSelectUser={(coords) => setSelectedCoords(coords)} />
+      <Sidebar 
+        users={users}
+        onSelectUser={
+          (coords) => setSelectedCoords(coords)
+        }
+        isDarkMode={isDarkMode}
+        toggleTheme={toggleTheme}
+      />
 
       <MapContainer
+        key={ isDarkMode ? "dark" : "light" }
         center={CENTER_POSITION}
         zoom={14}
+        attributionControl={false}
         zoomControl={false}
         style={{ height: "100%", width: "100%" }}
       >
-        <ZoomControl position="topright" />
         <MapFlyController selectedCoords={selectedCoords} />
         <VectorTileLayer key={isDarkMode ? "dark" : "light"} styleUrl={styleUrl} />
         {users
@@ -196,6 +207,7 @@ function App() {
           })
         }
       </MapContainer>
+      <Attribution />
     </div>
   );
 };

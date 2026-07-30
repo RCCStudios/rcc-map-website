@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { Menu, ChevronLeft, Search, Lock, Unlock, Battery, Network } from "lucide-react";
+import { Menu, ChevronLeft, Search, Lock, Unlock, Battery, Network, Sun, Moon } from "lucide-react";
 import { getStatusBadgeColor, formatNetworkStatus } from "../utils/formatters";
+// import { useDarkMode } from "../hooks/useDarkMode";
 import { useTranslation } from "react-i18next";
 
-export default function Sidebar({ users, onSelectUser }) {
+export default function Sidebar({ users, onSelectUser, isDarkMode, toggleTheme }) {
     const { t, i18n } = useTranslation();
     const toggleLanguage = () => {
         const currentLang = i18n.language?.split('-')[0] || 'ru';
         i18n.changeLanguage(currentLang === 'ru' ? 'en' : 'ru');
     };
+
+    // const { isDarkMode, toggleTheme } = useDarkMode();
 
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -68,7 +71,7 @@ export default function Sidebar({ users, onSelectUser }) {
                 }}>
                     <h2 style={{ margin: 0, fontSize: "20px", whiteSpace: "nowrap", color: "var(--color-text-main)" }}>{t('sidebar.title')}: ({users.length})</h2>
 
-                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: "8px" }}>
                         <button 
                             type="button" 
                             onClick={toggleLanguage}
@@ -84,7 +87,6 @@ export default function Sidebar({ users, onSelectUser }) {
                                 transition: 'all 0.2s ease',
                                 outline: 'none'
                             }}
-
                             onMouseEnter={(e) => {
                                 e.currentTarget.style.borderColor = 'var(--color-brand-main)';
                                 e.currentTarget.style.color = 'var(--color-text-main)';
@@ -95,6 +97,33 @@ export default function Sidebar({ users, onSelectUser }) {
                             }}
                         >
                             {(i18n.language?.split('-')[0] || 'ru').toUpperCase()}
+                        </button>
+                        <button
+                            type="button" 
+                            onClick={toggleTheme}
+                            style={{ 
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                padding: '8px',
+                                borderRadius: '50%',
+                                border: '1px solid var(--color-border-strong)',
+                                backgroundColor: 'var(--color-bg-surface)',
+                                cursor: 'pointer',
+                                color: 'var(--color-text-muted)',
+                                transition: 'all 0.2s ease',
+                                outline: 'none'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.borderColor = 'var(--color-brand-main)';
+                                e.currentTarget.style.color = 'var(--color-text-main)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.borderColor = 'var(--color-border-strong)';
+                                e.currentTarget.style.color = 'var(--color-text-muted)';
+                            }}
+                        >
+                            { isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
                         </button>
                     </div>
                 </div>

@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import { AlertCircle, CheckCircle2, LogIn } from 'lucide-react';
+import { AlertCircle, CheckCircle2, LogIn, Sun, Moon } from 'lucide-react';
+// import { useDarkMode } from '../hooks/useDarkMode';
 
-export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }) {
+export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage, isDarkMode, toggleTheme }) {
     const { t, i18n } = useTranslation();
     const isError = logMessage?.toLowerCase().includes("error");
 
@@ -10,6 +11,8 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
         i18n.changeLanguage(currentLang === 'ru' ? 'en' : 'ru');
     };
 
+    // const { isDarkMode, toggleTheme } = useDarkMode();
+
     return (
         <div style={{
             display: "flex",
@@ -17,17 +20,50 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
             alignItems: "center",
             height: "100vh",
             width: "100vw",
-            background: "radial-gradient(circle at center, var(--color-brand-main) 0%, var(--color-bg-surface) 100%)",
+            position: "relative",
+            overflow: "hidden",
+            backgroundColor: "var(--color-bg-surface)",
             fontFamily: "system-ui, -apple-system, sans-serif"
         }}>
+            <style>{`
+                @keyframes pulseGlow {
+                    0%, 100% {
+                        transform: translate(-50%, -50%) scale(1);
+                        opacity: 0.4;
+                    }
+                    50% {
+                        transform: translate(-50%, -50%) scale(1.25);
+                        opacity: 0.7;
+                    }
+                }
+            `}</style>
+
+            <div style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                width: "50%",
+                aspectRatio: 1 / 1,
+                background: "radial-gradient(circle, var(--color-brand-main) 0%, rgba(0,0,0,0) 70%)",
+                borderRadius: "50%",
+                filter: "blur(90px)",
+                animation: "pulseGlow 6s ease-in-out infinite",
+                pointerEvents: "none",
+                zIndex: 0
+            }} />
+
             <form 
                 onSubmit={handleLogin} 
                 style={{
+                    position: "relative",
+                    zIndex: 1,
                     background: "var(--color-bg-canvas)",
-                    backdropFilter: "blur(10px)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
                     padding: "32px 28px",
                     borderRadius: "16px",
-                    boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3)",
+                    boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3)",
+                    border: "1px solid var(--color-bg-canvas)",
                     width: "100%",
                     maxWidth: "360px",
                     display: "flex",
@@ -36,7 +72,7 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
                     boxSizing: "border-box"
                 }}
             >
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', gap: "8px" }}>
                     <button 
                         type="button" 
                         onClick={toggleLanguage}
@@ -63,6 +99,34 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage }
                             }}
                     >
                         {(i18n.language?.split('-')[0] || 'ru').toUpperCase()}
+                    </button>
+
+                    <button
+                        type="button" 
+                        onClick={toggleTheme}
+                        style={{ 
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '8px',
+                            borderRadius: '50%',
+                            border: '1px solid var(--color-border-strong)',
+                            backgroundColor: 'var(--color-bg-surface)',
+                            cursor: 'pointer',
+                            color: 'var(--color-text-muted)',
+                            transition: 'all 0.2s ease',
+                            outline: 'none'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--color-brand-main)';
+                            e.currentTarget.style.color = 'var(--color-text-main)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--color-border-strong)';
+                            e.currentTarget.style.color = 'var(--color-text-muted)';
+                        }}
+                    >
+                        { isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
                     </button>
                 </div>
                 

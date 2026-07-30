@@ -59,3 +59,7 @@ body {
 .leaflet-container a.leaflet-popup-close-button {
   color: var(--color-text-muted) !important;
 }
+
+.leaflet-control-attribution {
+  display: none !important;
+}

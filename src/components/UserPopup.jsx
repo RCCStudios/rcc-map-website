@@ -22,9 +22,9 @@ export default function UserPopup({ user }) {
                     gap: "4px",
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: user.screenLockStatus?.value ? "#f1f3f5" : "#e6fcf5",
-                    color: user.screenLockStatus?.value ? "#495057" : "#0ca678",
-                    border: `1px solid ${user.screenLockStatus?.value ? "#ced4da" : "#96f2d7"}`
+                    backgroundColor: user.screenLockStatus?.value ? "var(--color-bg-surface)" : "var(--color-bg-canvas)",
+                    color: user.screenLockStatus?.value ? "var(--color-text-muted)" : "var(--color-brand-main)",
+                    border: `1px solid ${user.screenLockStatus?.value ? "var(--color-text-muted)" : "var(--color-brand-main)"}`
                 }}>
                     {user.screenLockStatus?.value
                         ? <><Lock size={12} />{t('status.screen_lock.locked')}</>
