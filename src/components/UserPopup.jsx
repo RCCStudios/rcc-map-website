@@ -22,17 +22,17 @@ export default function UserPopup({ user }) {
                     gap: "4px",
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: user.screenLock?.value ? "#f1f3f5" : "#e6fcf5",
-                    color: user.screenLock?.value ? "#495057" : "#0ca678",
-                    border: `1px solid ${user.screenLock?.value ? "#ced4da" : "#96f2d7"}`
+                    backgroundColor: user.screenLockStatus?.value ? "#f1f3f5" : "#e6fcf5",
+                    color: user.screenLockStatus?.value ? "#495057" : "#0ca678",
+                    border: `1px solid ${user.screenLockStatus?.value ? "#ced4da" : "#96f2d7"}`
                 }}>
-                    {user.screenLock?.value
+                    {user.screenLockStatus?.value
                         ? <><Lock size={12} />{t('status.screen_lock.locked')}</>
                         : <><Unlock size={12} color="#10b981" />{t('status.screen_lock.unlocked')}</>
                     }
                 </span>
                 <div style={{ fontSize: "10px", color: "var(--color-text-muted)" }}>
-                    {formatUnixTimestamp(user.screenLock?.timestamp)}
+                    {formatUnixTimestamp(user.screenLockStatus?.timestamp)}
                 </div>
             </div>
 
@@ -47,12 +47,12 @@ export default function UserPopup({ user }) {
                     <span style={{ 
                         fontSize: "13px", 
                         fontWeight: "bold", 
-                        color: user.batteryLevel?.value < 20 ? "#c4192a" : ( user.batteryLevel?.value > 80 ? "#20a13e" : "#ddaa12" ) 
+                        color: user.batteryStatus?.value < 20 ? "#c4192a" : ( user.batteryStatus?.value > 80 ? "#20a13e" : "#ddaa12" ) 
                     }}>
-                        {user.batteryLevel?.value ?? "N/A"}%
+                        {user.batteryStatus?.value ?? "N/A"}%
                     </span>
                     <div style={{ fontSize: "10px", color: "var(--color-text-muted)" }}>
-                        {formatUnixTimestamp(user.batteryLevel?.timestamp)}
+                        {formatUnixTimestamp(user.batteryStatus?.timestamp)}
                     </div>
                 </div>
             </div>
@@ -64,10 +64,10 @@ export default function UserPopup({ user }) {
                 </span>
                 <div style={{ textAlign: "right" }}>
                     <span style={{ fontSize: "13px", fontWeight: "bold", color: "var(--color-text-muted)" }}>
-                    {formatNetworkStatus(user.network?.value, t) ?? t('status.network.unknown')}
+                    {formatNetworkStatus(user.networkStatus?.value, t) ?? t('status.network.unknown')}
                     </span>
                     <div style={{ fontSize: "10px", color: "var(--color-text-muted)" }}>
-                    {formatUnixTimestamp(user.network?.timestamp)}
+                    {formatUnixTimestamp(user.networkStatus?.timestamp)}
                     </div>
                 </div>
             </div>

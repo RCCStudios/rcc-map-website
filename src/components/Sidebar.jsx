@@ -183,8 +183,8 @@ export default function Sidebar({ users, onSelectUser }) {
                                             alignItems: "center",
                                             fontWeight: "bold",
                                         }}>
-                                            {user.pfpPath 
-                                                ? <img src={user.pfpPath} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                            {user.avatarPath 
+                                                ? <img src={user.avatarPath} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                                                 : (user.name ? user.name.charAt(0).toUpperCase() : "?")
                                             }
                                         </div>
@@ -206,12 +206,12 @@ export default function Sidebar({ users, onSelectUser }) {
                                         </div>
                                         <div style={{
                                             fontSize: "12px",
-                                            color: `${user.screenLock?.value ? "#495057" : "#0ca678"}`,
+                                            color: `${user.screenLockStatus?.value ? "#495057" : "#0ca678"}`,
                                             display: "flex",
                                             alignItems: "center",
                                             gap: "4px"
                                         }}>
-                                            {user.screenLock?.value 
+                                            {user.screenLockStatus?.value 
                                                 ? <><Lock size={12} /> {t('status.screen_lock.locked')}</> 
                                                 : <><Unlock size={12} color="#10b981" /> {t('status.screen_lock.unlocked')}</>
                                             }
@@ -229,11 +229,11 @@ export default function Sidebar({ users, onSelectUser }) {
                                 }}>
                                     <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                                         <Battery size={14} />
-                                        {user.batteryLevel?.value ?? "N/A"}%
+                                        {user.batteryStatus?.value ?? "N/A"}%
                                     </div>
                                     <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                                         <Network size={14} />
-                                        {formatNetworkStatus(user.network?.value, t)}
+                                        {formatNetworkStatus(user.networkStatus?.value, t)}
                                     </div>
                                 </div>
                             </div>

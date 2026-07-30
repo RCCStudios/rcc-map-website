@@ -2,10 +2,7 @@ import L from "leaflet"
 import { getStatusBadgeColor } from "./formatters";
 
 export function createUserIcon(user) {
-    const avatarPath = user.pfpPath || null;
-    const batteryLevel = user.batteryLevel?.value || 0;
-    const networkStatus = user.network?.value || 0;
-    const screenLockStatus = user.screenLock?.value || true;
+    const avatarPath = user.avatarPath || null;
 
     const badgeColor = getStatusBadgeColor(user);
 

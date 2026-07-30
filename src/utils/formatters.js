@@ -38,11 +38,11 @@ export function getStatusBadgeColor(user) {
     const timeTo = 300;
 
     const timestamps = [
-        user.batteryLevel?.timestamp,
+        user.batteryStatus?.timestamp,
         user.latitude?.timestamp,
         user.longitude?.timestamp,
-        user.network?.timestamp,
-        user.screenLock?.timestamp
+        user.networkStatus?.timestamp,
+        user.screenLockStatus?.timestamp
     ].filter(Boolean);
 
     if (timestamps.length === 0) return "#e11025";

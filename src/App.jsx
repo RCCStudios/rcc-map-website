@@ -44,7 +44,7 @@ function App() {
     
     const getToken = async () => {
       try {
-        const url = "/api/getToken" // `https://${baseUrl}/api/getToken`;
+        const url = "/api/token" // `https://${baseUrl}/api/getToken`;
         const response = await fetch(url, {
           headers: {
             "Authorization": `Bearer ${otp}`
@@ -65,7 +65,7 @@ function App() {
     
     const getTelemetry = async () => {
       try {
-        const url = "/api/getTelemetry" // `https://${baseUrl}/api/getTelemetry`;
+        const url = "/api/telemetry" // `https://${baseUrl}/api/getTelemetry`;
         const response = await fetch(url, {
           headers: {
             "Authorization": `Bearer ${token}`
@@ -98,13 +98,13 @@ function App() {
           if (user.id !== data.id) return user;
           return {
             ...user,
-            batteryLevel: data.batteryLevel !== undefined
+            batteryStatus: data.batteryStatus !== undefined
               ? {
-                ...user.batteryLevel,
+                ...user.batteryStatus,
                 timestamp: currentTimestamp,
-                value: data.batteryLevel
+                value: data.batteryStatus
               }
-              : user.batteryLevel,
+              : user.batteryStatus,
 
             latitude: data.latitude !== undefined
               ? {
@@ -122,21 +122,21 @@ function App() {
               }
               : user.longitude,
 
-            network: data.network !== undefined
+            networkStatus: data.networkStatus !== undefined
               ? {
-                ...user.network,
+                ...user.networkStatus,
                 timestamp: currentTimestamp,
-                value: data.network
+                value: data.networkStatus
               }
-              : user.network,
+              : user.networkStatus,
 
-            screenLock: data.screenLock !== undefined
+            screenLockStatus: data.screenLockStatus !== undefined
               ? {
-                ...user.screenLock,
+                ...user.screenLockStatus,
                 timestamp: currentTimestamp,
-                value: data.screenLock
+                value: data.screenLockStatus
               }
-              : user.screenLock,
+              : user.screenLockStatus,
           }
         });
       });
@@ -186,7 +186,7 @@ function App() {
 
             return (
               <Marker
-                key={`${user.id}-${user.batteryLevel?.value}-${user.network?.value}-${user.screenLock?.value}`}
+                key={`${user.id}-${user.batteryStatus?.value}-${user.networkStatus?.value}-${user.screenLockStatus?.value}`}
                 position={[user.latitude?.value, user.longitude?.value]}
                 icon={customIcon}
               >
