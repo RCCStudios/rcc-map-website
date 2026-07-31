@@ -1,9 +1,9 @@
 {
     "login": {
         "title": "Welcome to RCC Map",
-        "subtitle": "Enter your OTP code to login",
+        "subtitle": "Enter your OTP code to log in",
         "placeholder": "Enter OTP code",
-        "button": "Sign in"
+        "button": "Log in"
     },
     "sidebar": {
         "title": "Users",
