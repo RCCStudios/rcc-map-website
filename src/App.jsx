@@ -22,23 +22,29 @@ const DARK_MAP_ID = import.meta.env.VITE_DARK_MAP_ID;
 const LIGHT_MAP_ID = import.meta.env.VITE_LIGHT_MAP_ID;
 
 function App() {
+  const [searchParams] = useState(() => new URLSearchParams(window.location.search));
+
   const { isDarkMode, toggleTheme } = useDarkMode();
   const mapId = isDarkMode ? DARK_MAP_ID : LIGHT_MAP_ID;
   const styleUrl = `https://api.maptiler.com/maps/${mapId}/style.json?key=${MAPTILER_KEY}`;
 
   const baseUrl = window.location.host;
-  const [otp, setOtp] = useState(() => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get("otp") || null;
-  });
+  const [otp, setOtp] = useState(() => searchParams.get("otp") || null);
   const [inputOtp, setInputOtp] = useState("");
-  const [token, setToken] = useState(() => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get("token") || null;
-  });
+  const [token, setToken] = useState(() => searchParams.get("token") || null);
   const [users, setUsers] = useState([]);
   const [logMessage, setLogMessage] = useState("");
   const [selectedCoords, setSelectedCoords] = useState(null);
+
+  useEffect(() => {
+    const isDarkParam = searchParams.get("isDarkTheme");
+    if (isDarkParam !== null) {
+      const shouldBeDark = isDarkParam === "true" || isDarkParam === "1";
+      if (shouldBeDark !== isDarkMode) {
+        toggleTheme();
+      }
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     if (!otp) return;
