@@ -166,9 +166,9 @@ export default function Login({ handleLogin, inputOtp, setInputOtp, logMessage, 
                         alignItems: "center",
                         gap: "8px",
                         boxSizing: "border-box",
-                        background: isError ? "#fef2f2" : "#f0fdf4",
+                        background: "var(--color-bg-surface)",
                         color: isError ? "#dc2626" : "#16a34a",
-                        border: `1px solid ${isError ? "#fecaca" : "#bbf7d0"}`
+                        border: `1px solid ${isError ? "#dc2626" : "#16a34a"}`
                     }}>
                         {isError ? <AlertCircle size={16} style={{ flexShrink: 0 }} /> : <CheckCircle2 size={16} style={{ flexShrink: 0 }} />}
                         <span style={{ wordBreak: "break-word" }}>{logMessage}</span>
