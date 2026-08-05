@@ -43,7 +43,7 @@ body {
 }
 
 .leaflet-marker-icon {
-  transition: transform 0.5s linear;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .leaflet-popup-content-wrapper {
