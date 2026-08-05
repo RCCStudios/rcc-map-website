@@ -1,5 +1,5 @@
 import { Popup } from "react-leaflet";
-import { Menu, ChevronLeft, Search, Lock, Unlock, Battery, Network } from "lucide-react";
+import { Menu, ChevronLeft, Search, Lock, Unlock, Battery, Network, MapPin } from "lucide-react";
 import { formatUnixTimestamp, formatNetworkStatus } from "../utils/formatters";
 import { useTranslation } from "react-i18next";
 
@@ -12,6 +12,9 @@ export default function UserPopup({ user }) {
                 <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "bold", color: "var(--color-text-main)" }}>
                     {user.name}
                 </h3>
+                <div style={{ display: "flex", fontSize: "10px", color: "var(--color-text-muted)", alignItems: "center", gap: "2px", paddingLeft: "8px" }}>
+                    <><MapPin size={12} />{formatUnixTimestamp(user.screenLockStatus?.timestamp)}</>
+                </div>
             </div>
             <div style={{ paddingBottom: "8px", display: "flex", flex: "row", justifyContent: "space-between", alignItems: "center", gap: "6px" }}>
                 <span style={{
