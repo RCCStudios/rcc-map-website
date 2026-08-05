@@ -85,7 +85,7 @@ export default function Sidebar({ users, onSelectUser, isDarkMode, toggleTheme }
                         return (
                             <div 
                                 key={user.id}
-                                onClick={() => hasCoords && onSelectUser([user.latitude.value, user.longitude.value])}
+                                onClick={ handleSelectUser }
                                 className={`user-card ${hasCoords ? 'clickable' : 'disabled'}`}
                             >
                                 <div className="user-card-main">
