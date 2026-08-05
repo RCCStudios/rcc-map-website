@@ -19,8 +19,8 @@
             "cellular": "Мобильная"
         },
         "screen_lock": {
-            "locked": "Заблокирован",
-            "unlocked": "Разблокирован"
+            "locked": "Выключен",
+            "unlocked": "Включен"
         }
     }
 }
