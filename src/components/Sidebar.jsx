@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Menu, ChevronLeft, Search, Lock, Unlock, Battery, Network, Sun, Moon } from "lucide-react";
-import { getStatusBadgeColor, formatNetworkStatus } from "../utils/formatters";
+import { getStatusBadge, getStatusBadgeColor, formatNetworkStatus } from "../utils/formatters";
 // import { useDarkMode } from "../hooks/useDarkMode";
 import { useTranslation } from "react-i18next";
 
@@ -18,7 +18,7 @@ export default function Sidebar({ users, onSelectUser, isDarkMode, toggleTheme }
 
     const filteredUsers = users
         .reduce((acc, user) => {
-            if (user.name?.toLowerCase().includes(search)) {
+            if (user.name?.toLowerCase().includes(searchTerm)) {
                 acc.push({ user, status: getStatusBadge(user) });
             }
             return acc;
