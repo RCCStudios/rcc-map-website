@@ -16,9 +16,15 @@ export default function Sidebar({ users, onSelectUser, isDarkMode, toggleTheme }
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
 
-    const filteredUsers = users.filter(user => 
-        user.name?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredUsers = users
+        .reduce((acc, user) => {
+            if (user.name?.toLowerCase().includes(search)) {
+                acc.push({ user, status: getStatusBadge(user) });
+            }
+            return acc;
+        }, [])
+        .sort((a, b) => b.status - a.status)
+        .map(item => item.user);
 
     return (
         <>

@@ -34,6 +34,18 @@ export function formatNetworkStatus(networkStatus, t) {
 }
 
 export function getStatusBadgeColor(user) {
+    switch (getStatusBadge(user)) {
+        case 2:
+            return "#1bb23e"
+        case 1:
+            return "#ffc107"
+        case 0:
+        default:
+            return "#e11025"
+    }
+}
+
+export function getStatusBadge(user) {
     const currentTimestamp = Math.floor(Date.now() / 1000); // fix to ms
     const timeTo = 300;
 
@@ -45,14 +57,14 @@ export function getStatusBadgeColor(user) {
         user.screenLockStatus?.timestamp
     ].filter(Boolean);
 
-    if (timestamps.length === 0) return "#e11025";
+    if (timestamps.length === 0) return 0;
 
     const isFresh = (ts) => (currentTimestamp - ts) < timeTo;
 
     const allFresh = timestamps.every(isFresh);
     const someFresh = timestamps.some(isFresh);
 
-    if (allFresh) return "#1bb23e";
-    if (someFresh) return "#ffc107";
-    return "#e11025";
+    if (allFresh) return 2;
+    if (someFresh) return 1;
+    return 0;
 }
