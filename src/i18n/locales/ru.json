@@ -10,7 +10,7 @@
         "search": "Поиск..."
     },
     "status": {
-        "battery": "Уровень заряда",
+        "battery": "Заряд",
         "network": {
             "title": "Сеть",
             "unknown": "Неизвестно",
