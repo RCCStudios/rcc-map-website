@@ -13,7 +13,7 @@ export default function UserPopup({ user }) {
                     {user.name}
                 </h3>
                 <div style={{ display: "flex", fontSize: "10px", color: "var(--color-text-muted)", alignItems: "center", gap: "2px", paddingLeft: "8px" }}>
-                    <><MapPin size={12} />{formatUnixTimestamp(user.screenLockStatus?.timestamp)}</>
+                    <><MapPin size={12} />{formatUnixTimestamp(user.latitude?.timestamp)}</>
                 </div>
             </div>
             <div style={{ paddingBottom: "8px", display: "flex", flex: "row", justifyContent: "space-between", alignItems: "center", gap: "6px" }}>
