@@ -86,7 +86,7 @@ function App() {
         const data = await response.json();
         const updatedUsers = data.map((user) => ({
           ...user,
-          avatarPath: `${protocol}://${baseUrl.replace(/\/$/, '')}/${user.avatarPath.replace(/^\//, '')}`
+          avatarPath: `${window.location.protocol}://${baseUrl.replace(/\/$/, '')}/${user.avatarPath.replace(/^\//, '')}`
         }));
         setLogMessage("Successfully got telemetry from server");
         setUsers(updatedUsers);
@@ -100,70 +100,106 @@ function App() {
   useEffect(() => {
     if (!token) return;
 
-    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    let socket = null;
+    let reconnectTimer = null;
+    let isMounted = true;
+    let reconnectDelay = 3000;
 
-    const cleanToken = String(token).trim();
-    const wsUrl = `${protocol}://${baseUrl}/api/${protocol}`;
-    const socket = new WebSocket(wsUrl, [`bearer.${cleanToken}`]);
+    const connect = () => {
+      const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+      const cleanToken = String(token).trim();
+      const wsUrl = `${protocol}://${baseUrl}/api/${protocol}`;
 
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      const currentTimestamp = Math.floor(Date.now() / 1000); // fix to ms
-      setUsers((prevUsers) => {
-        return prevUsers.map((user) => {
-          if (user.id !== data.id) return user;
-          return {
-            ...user,
-            batteryStatus: data.batteryStatus !== undefined
-              ? {
-                ...user.batteryStatus,
-                timestamp: currentTimestamp,
-                value: data.batteryStatus
-              }
-              : user.batteryStatus,
+      socket = new WebSocket(wsUrl, [`bearer.${cleanToken}`]);
 
-            latitude: data.latitude !== undefined
-              ? {
-                ...user.latitude,
-                timestamp: currentTimestamp,
-                value: data.latitude
-              }
-              : user.latitude,
+      socket.onopen = () => {
+        setLogMessage("WebSocket connected");
+        reconnectDelay = 3000;
+      };
 
-            longitude: data.longitude !== undefined
-              ? {
-                ...user.longitude,
-                timestamp: currentTimestamp,
-                value: data.longitude
-              }
-              : user.longitude,
+      socket.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          const currentTimestamp = Math.floor(Date.now() / 1000);
+          setUsers((prevUsers) => {
+            return prevUsers.map((user) => {
+              if (user.id !== data.id) return user;
+              return {
+                ...user,
+                batteryStatus: data.batteryStatus !== undefined
+                  ? {
+                    ...user.batteryStatus,
+                    timestamp: currentTimestamp,
+                    value: data.batteryStatus
+                  }
+                  : user.batteryStatus,
 
-            networkStatus: data.networkStatus !== undefined
-              ? {
-                ...user.networkStatus,
-                timestamp: currentTimestamp,
-                value: data.networkStatus
-              }
-              : user.networkStatus,
+                latitude: data.latitude !== undefined
+                  ? {
+                    ...user.latitude,
+                    timestamp: currentTimestamp,
+                    value: data.latitude
+                  }
+                  : user.latitude,
 
-            screenLockStatus: data.screenLockStatus !== undefined
-              ? {
-                ...user.screenLockStatus,
-                timestamp: currentTimestamp,
-                value: data.screenLockStatus
-              }
-              : user.screenLockStatus,
-          }
-        });
-      });
+                longitude: data.longitude !== undefined
+                  ? {
+                    ...user.longitude,
+                    timestamp: currentTimestamp,
+                    value: data.longitude
+                  }
+                  : user.longitude,
+
+                networkStatus: data.networkStatus !== undefined
+                  ? {
+                    ...user.networkStatus,
+                    timestamp: currentTimestamp,
+                    value: data.networkStatus
+                  }
+                  : user.networkStatus,
+
+                screenLockStatus: data.screenLockStatus !== undefined
+                  ? {
+                    ...user.screenLockStatus,
+                    timestamp: currentTimestamp,
+                    value: data.screenLockStatus
+                  }
+                  : user.screenLockStatus,
+              };
+            });
+          });
+        } catch (e) {
+          console.error("WS parse error:", e);
+        }
+      };
+
+      socket.onerror = (e) => {
+        setLogMessage(`WS Error: ${e.message || e || "Socket error"}`);
+      };
+
+      socket.onclose = (event) => {
+        if (!isMounted) return;
+
+        setLogMessage(`WS Closed (${event.reason || "No reason"}). Reconnecting in ${reconnectDelay / 1000}s...`);
+
+        reconnectTimer = setTimeout(() => {
+          reconnectDelay = Math.min(reconnectDelay * 1.5, 30000);
+          connect();
+        }, reconnectDelay);
+      };
     };
 
-    socket.onerror = (e) => { setLogMessage(`WS Error: ${e}`) };
+    connect();
 
     return () => {
-      socket.close();
+      isMounted = false;
+      if (reconnectTimer) clearTimeout(reconnectTimer);
+      if (socket) {
+        socket.onclose = null;
+        socket.close();
+      }
     };
-  }, [token]);
+  }, [token, baseUrl]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
