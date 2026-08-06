@@ -77,12 +77,21 @@ function App() {
           headers: {
             "Authorization": `Bearer ${token}`
           }
-        });
+        })
+
+        if (!response.ok) {
+          throw new Error(`Error. HTTP code: ${response.status}`);
+        }
+        
         const data = await response.json();
+        const updatedUsers = data.map((user) => ({
+          ...user,
+          avatarPath: `${baseUrl.replace(/\/$/, '')}/${user.avatarPath.replace(/^\//, '')}`
+        }));
         setLogMessage("Successfully got telemetry from server");
-        setUsers(data);
+        setUsers(updatedUsers);
       } catch (e) {
-        setLogMessage(`Get Telemetry Error: ${e}`);
+        setLogMessage(`Get Telemetry Error: ${e.message || e}`);
       }
     }
     getTelemetry();
