@@ -108,7 +108,7 @@ function App() {
     const connect = () => {
       const protocol = window.location.protocol === "https:" ? "wss" : "ws";
       const cleanToken = String(token).trim();
-      const wsUrl = `${protocol}//${baseUrl}/api/${protocol}`;
+      const wsUrl = `${protocol}://${baseUrl}/api/${protocol}`;
 
       socket = new WebSocket(wsUrl, [`bearer.${cleanToken}`]);
 
