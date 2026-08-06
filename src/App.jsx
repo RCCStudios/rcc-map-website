@@ -84,12 +84,12 @@ function App() {
         }
         
         const data = await response.json();
-        const updatedUsers = data.map((user) => ({
-          ...user,
-          avatarPath: `${window.location.protocol}://${baseUrl.replace(/\/$/, '')}/${user.avatarPath.replace(/^\//, '')}`
-        }));
+        // const updatedUsers = data.map((user) => ({
+        //   ...user,
+        //   avatarPath: `${window.location.protocol}://${baseUrl.replace(/\/$/, '')}/${user.avatarPath.replace(/^\//, '')}`
+        // }));
         setLogMessage("Successfully got telemetry from server");
-        setUsers(updatedUsers);
+        setUsers(data);
       } catch (e) {
         setLogMessage(`Get Telemetry Error: ${e.message || e}`);
       }
