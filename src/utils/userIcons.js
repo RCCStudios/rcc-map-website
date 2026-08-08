@@ -22,10 +22,27 @@ export function createUserIcon(user) {
         font-weight: bold;
         font-size: 20px;
       ">
-        ${avatarPath ?
-            `<img src="${avatarPath}" style="width: 100%; height: 100%; object-fit: cover;" />` :
-            ( user.name ? user.name.charAt(0).toUpperCase() : "?" )
-        }
+        ${avatarPath ? `
+          <img 
+            src="${avatarPath}" 
+            style="width: 100%; height: 100%; object-fit: cover; display: block;" 
+            onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';"
+          />
+        ` : ''}
+        
+        <div style="
+          width: 100%;
+          height: 100%;
+          display: ${avatarPath ? 'none' : 'flex'};
+          justify-content: center;
+          align-items: center;
+          font-weight: bold;
+          font-size: 20px;
+          color: var(--color-text-main);
+          background-color: var(--color-bg-surface);
+        ">
+          ${user.name ? user.name.charAt(0).toUpperCase() : "?"}
+        </div>
       </div>
       <div style="
         position: absolute;
