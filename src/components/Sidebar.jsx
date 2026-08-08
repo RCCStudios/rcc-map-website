@@ -91,10 +91,31 @@ export default function Sidebar({ users, onSelectUser, isDarkMode, toggleTheme }
                                 <div className="user-card-main">
                                     <div className="user-avatar-wrapper">
                                         <div className="user-avatar">
-                                            {user.avatarPath 
-                                                ? <img src={user.avatarPath} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                                : (user.name ? user.name.charAt(0).toUpperCase() : "?")
-                                            }
+                                            {user.avatarPath && (
+                                                <img 
+                                                    src={user.avatarPath} 
+                                                    alt={user.name || "Avatar"}
+                                                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
+                                                    onError={(e) => {
+                                                        e.currentTarget.style.display = 'none';
+                                                        if (e.currentTarget.nextElementSibling) {
+                                                            e.currentTarget.nextElementSibling.style.display = 'flex';
+                                                        }
+                                                    }}
+                                                />
+                                            )}
+                                            
+                                            <div style={{ 
+                                                display: user.avatarPath ? 'none' : 'flex',
+                                                width: '100%',
+                                                height: '100%',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                fontWeight: 'bold',
+                                                fontSize: '16px'
+                                            }}>
+                                                {user.name ? user.name.charAt(0).toUpperCase() : "?"}
+                                            </div>
                                         </div>
                                         <div 
                                             className="user-status-dot"
