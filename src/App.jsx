@@ -8,8 +8,10 @@ import UserPopup from "./components/UserPopup";
 import MapFlyController from "./components/MapFlyController";
 import Login from "./components/Login"
 
+import MarkerClusterGroup from "react-leaflet-cluster";
+
 import { useDarkMode } from "./hooks/useDarkMode";
-import { createUserIcon } from "./utils/userIcons";
+import { createUserIcon, createClusterIcon } from "./utils/userIcons";
 import Attribution from "./components/Attribution";
 
 const CENTER_POSITION = [
@@ -234,29 +236,43 @@ function App() {
       <MapContainer
         key={ isDarkMode ? "dark" : "light" }
         center={CENTER_POSITION}
-        zoom={14}
+        zoom={12}
+        maxZoom={20}
         attributionControl={false}
         zoomControl={false}
         style={{ height: "100%", width: "100%" }}
       >
         <MapFlyController selectedCoords={selectedCoords} />
         <VectorTileLayer key={isDarkMode ? "dark" : "light"} styleUrl={styleUrl} />
-        {users
-          .filter(user => user.latitude?.value && user.longitude?.value)
-          .map(user => {
-            const customIcon = createUserIcon(user);
+        <MarkerClusterGroup
+          chunkedLoading
+          maxClusterRadius={50}
+          spiderfyOnMaxZoom={true}
+          zoomToBoundsOnClick={false}
+          iconCreateFunction={createClusterIcon}
+          eventHandlers={{
+            clusterclick: (e) => {
+              e.layer.spiderfy();
+            },
+          }}
+        >
+          {users
+            .filter(user => user.latitude?.value && user.longitude?.value)
+            .map(user => {
+              const customIcon = createUserIcon(user);
 
-            return (
-              <Marker
-                key={`${user.id}-${user.batteryStatus?.value}-${user.networkStatus?.value}-${user.screenLockStatus?.value}`}
-                position={[user.latitude?.value, user.longitude?.value]}
-                icon={customIcon}
-              >
-                <UserPopup user={user} />
-              </Marker>
-            );
-          })
-        }
+              return (
+                <Marker
+                  key={`${user.id}-${user.batteryStatus?.value}-${user.networkStatus?.value}-${user.screenLockStatus?.value}`}
+                  position={[user.latitude?.value, user.longitude?.value]}
+                  icon={customIcon}
+                >
+                  <UserPopup user={user} />
+                </Marker>
+              );
+            })
+          }
+        </MarkerClusterGroup>
       </MapContainer>
       <Attribution />
     </div>

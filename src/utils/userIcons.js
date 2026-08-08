@@ -47,3 +47,12 @@ export function createUserIcon(user) {
     popupAnchor: [0, -22]
   });
 }
+
+export function createClusterIcon(cluster) {
+  const count = cluster.getChildCount();
+  return L.divIcon({
+    html: `<div class="custom-cluster-marker"><span>${count}</span></div>`,
+    className: "custom-cluster-wrapper",
+    iconSize: L.point(42, 42, true),
+  });
+};

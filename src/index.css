@@ -70,10 +70,49 @@ body {
   color: var(--color-text-main) !important;
 }
 
-.leaflet-container a.leaflet-popup-close-button {
-  color: var(--color-text-muted) !important;
-}
-
 .leaflet-control-attribution {
   display: none !important;
+}
+
+.custom-cluster-wrapper {
+  background: transparent !important;
+  border: none !important;
+}
+
+.custom-cluster-marker {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--color-bg-surface);
+  color: var(--color-text-main);
+  border: 2px solid var(--color-brand-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+
+  will-change: box-shadow;
+  animation: cluster-pulse-shadow 2.5s infinite ease-in-out;
+}
+
+.custom-cluster-marker:hover {
+  transform: scale(1.1);
+  background: var(--color-brand-main);
+  color: #ffffff;
+  box-shadow: 0 6px 20px var(--color-brand-muted);
+}
+
+@keyframes cluster-pulse-shadow {
+  0% {
+    box-shadow: 0 0 0 0 var(--color-brand-muted), 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(0, 135, 102, 0), 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 135, 102, 0), 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
 }
