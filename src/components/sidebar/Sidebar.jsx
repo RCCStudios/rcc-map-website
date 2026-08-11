@@ -19,7 +19,7 @@ export default function Sidebar({ users, onSelectUser, isDarkMode, toggleTheme }
 
     const filteredUsers = users
         .reduce((acc, user) => {
-            if (user.name?.toLowerCase().includes(searchTerm)) {
+            if (user.username?.toLowerCase().includes(searchTerm)) {
                 acc.push({ user, status: getStatusBadge(user) })
             }
             return acc
@@ -94,7 +94,7 @@ export default function Sidebar({ users, onSelectUser, isDarkMode, toggleTheme }
                                             {user.avatarPath && (
                                                 <img 
                                                     src={user.avatarPath} 
-                                                    alt={user.name || "Avatar"}
+                                                    alt={user.username || "Avatar"}
                                                     style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} 
                                                     onError={(e) => {
                                                         e.currentTarget.style.display = 'none';
@@ -114,7 +114,7 @@ export default function Sidebar({ users, onSelectUser, isDarkMode, toggleTheme }
                                                 fontWeight: 'bold',
                                                 fontSize: '16px'
                                             }}>
-                                                {user.name ? user.name.charAt(0).toUpperCase() : "?"}
+                                                {user.username ? user.username.charAt(0).toUpperCase() : "?"}
                                             </div>
                                         </div>
                                         <div 
@@ -124,7 +124,7 @@ export default function Sidebar({ users, onSelectUser, isDarkMode, toggleTheme }
                                     </div>
 
                                     <div>
-                                        <div className="user-name">{user.name}</div>
+                                        <div className="user-name">{user.username}</div>
                                         <div className={`user-lock-status ${user.screenLockStatus?.value ? 'locked' : 'unlocked'}`}>
                                             {user.screenLockStatus?.value 
                                                 ? <><Lock size={12} /> {t('status.screen_lock.locked')}</> 

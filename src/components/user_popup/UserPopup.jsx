@@ -16,7 +16,7 @@ export default function UserPopup({ user }) {
     return ( 
         <Popup className="custom-popup">
             <div className="user-popup-header">
-                <h3 className="user-popup-title">{user.name}</h3>
+                <h3 className="user-popup-title">{user.username}</h3>
                 <div className="user-popup-timestamp">
                     <MapPin size={12} />
                     {formatUnixTimestamp(user.latitude?.timestamp)}
