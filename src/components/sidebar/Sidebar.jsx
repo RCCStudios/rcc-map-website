@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu, ChevronLeft, Search, Lock, Unlock, Battery, Network, Sun, Moon } from "lucide-react";
-import { getStatusBadge, getStatusBadgeColor, formatNetworkStatus } from "../utils/formatters";
-// import { useDarkMode } from "../hooks/useDarkMode";
+import { getStatusBadge, getStatusBadgeColor, formatNetworkStatus } from "../../utils/formatters";
+// import { useDarkMode } from "../hooks/useDarkMod e";
 import { useTranslation } from "react-i18next";
 import "./Sidebar.css"
 

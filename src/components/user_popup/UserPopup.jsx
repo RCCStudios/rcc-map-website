@@ -1,14 +1,13 @@
 import { Popup } from "react-leaflet";
 import { Lock, Unlock, Battery, Network, MapPin, Send } from "lucide-react";
-import { formatUnixTimestamp, formatNetworkStatus } from "../utils/formatters";
+import { formatUnixTimestamp, formatNetworkStatus } from "../../utils/formatters";
 import { useTranslation } from "react-i18next";
-import "./UserPopup.css"; // Подключаем наши стили
+import "./UserPopup.css";
 
 export default function UserPopup({ user }) {
     const { t } = useTranslation();
 
-    // Функция определения класса для цвета батареи
-    const getBatteryColorClass = (value) => {
+    const getBatteryColor = (value) => {
         if (value < 20) return "battery-low";
         if (value > 80) return "battery-high";
         return "battery-medium";
@@ -45,7 +44,7 @@ export default function UserPopup({ user }) {
                     {t('status.battery')}
                 </span>
                 <div className="user-popup-value-container">
-                    <span className={`user-popup-value ${getBatteryColorClass(user.batteryStatus?.value)}`}>
+                    <span className={`user-popup-value ${getBatteryColor(user.batteryStatus?.value)}`}>
                         {user.batteryStatus?.value ?? "N/A"}%
                     </span>
                     <div className="user-popup-time">

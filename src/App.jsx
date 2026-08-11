@@ -3,8 +3,8 @@ import { MapContainer, Marker, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
 import VectorTileLayer from "./components/VectorTileLayer";
-import Sidebar from "./components/Sidebar";
-import UserPopup from "./components/UserPopup";
+import Sidebar from "./components/sidebar/Sidebar";
+import UserPopup from "./components/user_popup/UserPopup";
 import MapFlyController from "./components/MapFlyController";
 import Login from "./components/Login"
 
