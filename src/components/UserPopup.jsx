@@ -1,79 +1,86 @@
 import { Popup } from "react-leaflet";
-import { Menu, ChevronLeft, Search, Lock, Unlock, Battery, Network, MapPin } from "lucide-react";
+import { Lock, Unlock, Battery, Network, MapPin, Send } from "lucide-react";
 import { formatUnixTimestamp, formatNetworkStatus } from "../utils/formatters";
 import { useTranslation } from "react-i18next";
+import "./UserPopup.css"; // Подключаем наши стили
 
 export default function UserPopup({ user }) {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
+
+    // Функция определения класса для цвета батареи
+    const getBatteryColorClass = (value) => {
+        if (value < 20) return "battery-low";
+        if (value > 80) return "battery-high";
+        return "battery-medium";
+    };
 
     return ( 
         <Popup className="custom-popup">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px", paddingTop: "12px" }}>
-                <h3 style={{ margin: 0, fontSize: "16px", fontWeight: "bold", color: "var(--color-text-main)" }}>
-                    {user.name}
-                </h3>
-                <div style={{ display: "flex", fontSize: "10px", color: "var(--color-text-muted)", alignItems: "center", gap: "2px", paddingLeft: "8px" }}>
-                    <><MapPin size={12} />{formatUnixTimestamp(user.latitude?.timestamp)}</>
+            <div className="user-popup-header">
+                <h3 className="user-popup-title">{user.name}</h3>
+                <div className="user-popup-timestamp">
+                    <MapPin size={12} />
+                    {formatUnixTimestamp(user.latitude?.timestamp)}
                 </div>
             </div>
-            <div style={{ paddingBottom: "8px", display: "flex", flex: "row", justifyContent: "space-between", alignItems: "center", gap: "6px" }}>
-                <span style={{
-                    fontSize: "10px",
-                    padding: "2px 6px",
-                    borderRadius: "10px",
-                    fontWeight: "bold",
-                    gap: "4px",
-                    display: "flex",
-                    alignItems: "center",
-                    backgroundColor: user.screenLockStatus?.value ? "var(--color-bg-surface)" : "var(--color-bg-canvas)",
-                    color: user.screenLockStatus?.value ? "var(--color-text-muted)" : "var(--color-brand-main)",
-                    border: `1px solid ${user.screenLockStatus?.value ? "var(--color-text-muted)" : "var(--color-brand-main)"}`
-                }}>
-                    {user.screenLockStatus?.value
-                        ? <><Lock size={12} />{t('status.screen_lock.locked')}</>
-                        : <><Unlock size={12} color="#10b981" />{t('status.screen_lock.unlocked')}</>
-                    }
+
+            <div className="user-popup-status-row">
+                <span className={`user-popup-badge ${user.screenLockStatus?.value ? "locked" : "unlocked"}`}>
+                    {user.screenLockStatus?.value ? (
+                        <><Lock size={12} />{t('status.screen_lock.locked')}</>
+                    ) : (
+                        <><Unlock size={12} color="var(--color-brand-main)" />{t('status.screen_lock.unlocked')}</>
+                    )}
                 </span>
-                <div style={{ fontSize: "10px", color: "var(--color-text-muted)" }}>
+                <div className="user-popup-time">
                     {formatUnixTimestamp(user.screenLockStatus?.timestamp)}
                 </div>
             </div>
 
-            <hr style={{ border: "none", borderTop: "1px solid var(--color-text-muted)", margin: "8px 0" }} />
+            <hr className="user-popup-divider" />
 
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
-                <span style={{ fontSize: "13px", color: "var(--color-text-muted)", display: "flex", alignItems: "center", gap: "4px", paddingRight: "8px" }}>
+            <div className="user-popup-row">
+                <span className="user-popup-label">
                     <Battery size={16} />
                     {t('status.battery')}
                 </span>
-                <div style={{ textAlign: "right" }}>
-                    <span style={{ 
-                        fontSize: "13px", 
-                        fontWeight: "bold", 
-                        color: user.batteryStatus?.value < 20 ? "#c4192a" : ( user.batteryStatus?.value > 80 ? "#20a13e" : "#ddaa12" ) 
-                    }}>
+                <div className="user-popup-value-container">
+                    <span className={`user-popup-value ${getBatteryColorClass(user.batteryStatus?.value)}`}>
                         {user.batteryStatus?.value ?? "N/A"}%
                     </span>
-                    <div style={{ fontSize: "10px", color: "var(--color-text-muted)" }}>
+                    <div className="user-popup-time">
                         {formatUnixTimestamp(user.batteryStatus?.timestamp)}
                     </div>
                 </div>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <span style={{ fontSize: "13px", color: "var(--color-text-muted)", display: "flex", alignItems: "center", gap: "4px", paddingRight: "8px" }}>
+            <div className="user-popup-row">
+                <span className="user-popup-label">
                     <Network size={16} />
                     {t('status.network.title')}
                 </span>
-                <div style={{ textAlign: "right" }}>
-                    <span style={{ fontSize: "13px", fontWeight: "bold", color: "var(--color-text-muted)" }}>
-                    {formatNetworkStatus(user.networkStatus?.value, t) ?? t('status.network.unknown')}
+                <div className="user-popup-value-container">
+                    <span className="user-popup-value">
+                        {formatNetworkStatus(user.networkStatus?.value, t) ?? t('status.network.unknown')}
                     </span>
-                    <div style={{ fontSize: "10px", color: "var(--color-text-muted)" }}>
-                    {formatUnixTimestamp(user.networkStatus?.timestamp)}
+                    <div className="user-popup-time">
+                        {formatUnixTimestamp(user.networkStatus?.timestamp)}
                     </div>
                 </div>
             </div>
+
+            <hr className="user-popup-divider" />
+            
+            {user.telegram && (
+                <a 
+                    href={`tg://resolve?domain=${user.telegram}`}
+                    className="tg-action-btn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <Send size={18} />
+                </a>
+            )}
         </Popup>
     );
 }
