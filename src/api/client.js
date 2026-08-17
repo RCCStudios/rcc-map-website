@@ -14,3 +14,19 @@ export async function postJson(url, auth, body) {
 
     return response.json().catch(() => null);
 }
+
+export async function getJson(url, auth) {
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${auth}`,
+            "Content-Type": "application/json"
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error(`Request failed: ${response.status} ${response.statusText}`);
+    }
+
+    return response.json().catch(() => null);
+}

@@ -13,6 +13,8 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import { useDarkMode } from "./hooks/useDarkMode";
 import { createUserIcon, createClusterIcon } from "./utils/userIcons";
 import Attribution from "./components/Attribution";
+import { getToken } from "./api/getToken";
+import { getTelemetry } from "./api/getTelemetry";
 
 const CENTER_POSITION = [
   Number(import.meta.env.VITE_CENTER_LAT) || 0.0,
@@ -50,49 +52,34 @@ function App() {
 
   useEffect(() => {
     if (!otp) return;
-    
-    const getToken = async () => {
-      try {
-        const url = "/api/token"
-        const response = await fetch(url, {
-          headers: {
-            "Authorization": `Bearer ${otp}`
-          }
-        });
-        const data = await response.json();
-        setLogMessage("Successfully got token from server");
-        setToken(data.token);
-      } catch (e) {
-        setLogMessage(`Get Token Error: ${e}`);
-      }
-    }
-    getToken();
+
+    const fetchToken = async () => {
+        try {
+            const { token } = await getToken(otp);
+            setToken(token);
+            setLogMessage("Successfully got token from server");
+        } catch (e) {
+            setLogMessage(`Get Token Error: ${e}`);
+        }
+    };
+
+    fetchToken();
   }, [otp]);
 
   useEffect(() => {
     if (!token) return;
     
-    const getTelemetry = async () => {
+    const fetchTelemetry = async () => {
       try {
-        const url = "/api/telemetry"
-        const response = await fetch(url, {
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        })
-
-        if (!response.ok) {
-          throw new Error(`Error. HTTP code: ${response.status}`);
-        }
-        
-        const data = await response.json();
+        const data = await getTelemetry(token);
+        console.log("Telemetry response:", data);
         setLogMessage("Successfully got telemetry from server");
-        setUsers(data);
+        setUsers(data.users ?? data ?? []);
       } catch (e) {
         setLogMessage(`Get Telemetry Error: ${e.message || e}`);
       }
     }
-    getTelemetry();
+    fetchTelemetry();
   }, [token]);
 
   useEffect(() => {
