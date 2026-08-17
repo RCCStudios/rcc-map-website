@@ -86,10 +86,6 @@ function App() {
         }
         
         const data = await response.json();
-        // const updatedUsers = data.map((user) => ({
-        //   ...user,
-        //   avatarPath: `${window.location.protocol}://${baseUrl.replace(/\/$/, '')}/${user.avatarPath.replace(/^\//, '')}`
-        // }));
         setLogMessage("Successfully got telemetry from server");
         setUsers(data);
       } catch (e) {
