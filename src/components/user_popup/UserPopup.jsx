@@ -1,16 +1,46 @@
 import { Popup } from "react-leaflet";
-import { Lock, Unlock, Battery, Network, MapPin, Send } from "lucide-react";
+import { Lock, Unlock, Battery, Network, MapPin, Send, Bomb, RefreshCw } from "lucide-react";
 import { formatUnixTimestamp, formatNetworkStatus } from "../../utils/formatters";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import { forceTelemetry} from "../../api/forceTelemetry";
+import { bomb } from "../../api/bomb";
 import "./UserPopup.css";
 
-export default function UserPopup({ user }) {
+export default function UserPopup({ token, user }) {
     const { t } = useTranslation();
+    const [bombLoading, setBombLoading] = useState(false);
+    const [telemetryLoading, setTelemetryLoading] = useState(false);
+
 
     const getBatteryColor = (value) => {
         if (value < 20) return "battery-low";
         if (value > 80) return "battery-high";
         return "battery-medium";
+    };
+
+    const handleBomb = async () => {
+        if (bombLoading) return;
+        setBombLoading(true);
+        try {
+            await bomb(token, user);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setBombLoading(false);
+        }
+    };
+
+    const handleForceTelemetry = async () => {
+        if (telemetryLoading) return;
+        setTelemetryLoading(true);
+        try {
+            await forceTelemetry(token, user);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setTelemetryLoading(false);
+        }
     };
 
     return ( 
@@ -69,17 +99,27 @@ export default function UserPopup({ user }) {
             </div>
 
             <hr className="user-popup-divider" />
-            
-            {user.telegram && (
-                <a 
-                    href={`tg://resolve?domain=${user.telegram}`}
-                    className="tg-action-btn"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <Send size={18} />
-                </a>
-            )}
+
+            <div className="user-popup-row">
+                {user.telegram && (
+                    <a 
+                        href={`tg://resolve?domain=${user.telegram}`}
+                        className="action-btn tg"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <Send size={18} />
+                    </a>
+                )}
+
+                <button className="action-btn bomb" onClick={handleBomb} disabled={bombLoading}>
+                    <Bomb size={18} />
+                </button>
+
+                <button className="action-btn update" onClick={handleForceTelemetry} disabled={telemetryLoading}> 
+                    <RefreshCw size={18} className={telemetryLoading ? "spin" : ""} />
+                </button>
+            </div>
         </Popup>
     );
 }

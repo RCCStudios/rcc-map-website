@@ -70,6 +70,7 @@
 
 .user-popup-row {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 6px;
@@ -110,41 +111,108 @@
   color: #20a13e;
 }
 
-.tg-action-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    background-color: transparent !important;
-    border: 1px solid #0088cc !important;
-    
-    box-shadow: 0 2px 8px rgba(0, 136, 204, 0.4);
-    text-decoration: none;
-    transition: all 0.2s ease-in-out;
-    cursor: pointer;
-    
-    margin-top: 10px;
-    margin-left: auto;
-    
-    flex-shrink: 0;
+.action-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  background-color: transparent !important;
+  border: 1px solid #d5d5d5 !important;
+  
+  box-shadow: 0 2px 8px rgba(255,255,255,0.4);
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  
+  flex-shrink: 0;
 }
 
-.tg-action-btn:hover {
-    background-color: #0088cc !important;
-    box-shadow: 0 4px 12px rgba(0, 136, 204, 0.5);
-    transform: translateY(-1px);
+.action-btn:hover {
+  background-color: #d5d5d5 !important;
+  box-shadow: 0 4px 12px rgba(128,128,128,0.5);
+  transform: translateY(-1px);
 }
 
-.tg-action-btn svg {
-    transform: translate(-1.5px, 1.5px); 
-    
-    color: #0088cc !important; 
-    transition: all 0.2s ease-in-out;
+.action-btn svg {    
+  color: #d5d5d5 !important; 
+  transition: all 0.2s ease-in-out;
 }
 
-.tg-action-btn:hover svg {
-    color: #ffffff !important;
+.action-btn:hover svg {
+  color: #ffffff !important;
+}
+
+.action-btn.tg {
+  background-color: transparent !important;
+  border: 1px solid #0088cc !important;
+  
+  box-shadow: 0 2px 8px rgb(from #0088cc r g b / 0.4);
+}
+
+.action-btn.tg:hover {
+  background-color: #0088cc !important;
+  box-shadow: 0 4px 12px rgba(0, 136, 204, 0.5);
+  transform: translateY(-1px);
+}
+
+.action-btn.tg svg {
+  transform: translate(-1.5px, 1.5px); 
+  
+  color: #0088cc !important; 
+  transition: all 0.2s ease-in-out;
+}
+
+.action-btn.tg:hover svg {
+  color: #ffffff !important;
+}
+
+.action-btn.bomb {
+  background-color: transparent !important;
+  border: 1px solid #cc0000 !important;
+  
+  box-shadow: 0 2px 8px rgb(from #cc0000 r g b / 0.4);
+}
+
+.action-btn.bomb:hover {
+  background-color: #cc0000 !important;
+  box-shadow: 0 4px 12px rgba(204, 0, 0, 0.5);
+  transform: translateY(-1px);
+}
+
+.action-btn.bomb svg {   
+  color: #cc0000 !important; 
+  transition: all 0.2s ease-in-out;
+}
+
+.action-btn.bomb:hover svg {
+  color: #ffffff !important;
+}
+
+.action-btn.update {
+  background-color: transparent !important;
+  border: 1px solid #00c000 !important;
+  
+  box-shadow: 0 2px 8px rgb(from #00c000 r g b / 0.4);
+}
+
+.action-btn.update:hover {
+  background-color: #00c000 !important;
+  box-shadow: 0 4px 12px rgba(0, 204, 17, 0.5);
+  transform: translateY(-1px);
+}
+
+.action-btn.update svg {   
+  color: #00c000 !important; 
+  transition: all 0.2s ease-in-out;
+}
+
+.action-btn.update:hover svg {
+  color: #ffffff !important;
 }

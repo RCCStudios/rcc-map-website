@@ -267,7 +267,7 @@ function App() {
                   position={[user.latitude?.value, user.longitude?.value]}
                   icon={customIcon}
                 >
-                  <UserPopup user={user} />
+                  <UserPopup token={token} user={user} />
                 </Marker>
               );
             })
