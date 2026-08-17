@@ -53,7 +53,7 @@ function App() {
     
     const getToken = async () => {
       try {
-        const url = "/api/token" // `https://${baseUrl}/api/getToken`;
+        const url = "/api/token"
         const response = await fetch(url, {
           headers: {
             "Authorization": `Bearer ${otp}`
@@ -74,7 +74,7 @@ function App() {
     
     const getTelemetry = async () => {
       try {
-        const url = "/api/telemetry" // `https://${baseUrl}/api/getTelemetry`;
+        const url = "/api/telemetry"
         const response = await fetch(url, {
           headers: {
             "Authorization": `Bearer ${token}`
